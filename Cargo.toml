@@ -1,0 +1,14 @@
+[package]
+name = "cipher-paratime"
+version = "0.1.0"
+authors = ["Oasis Protocol Foundation <info@oasisprotocol.org>"]
+edition = "2018"
+license = "Apache-2.0"
+
+[dependencies]
+# TODO: Use a released version of the SDK.
+oasis-runtime-sdk = { git = "https://github.com/oasisprotocol/oasis-sdk", branch = "main" }
+
+[patch.crates-io]
+# TODO: Remove when merged upstream (briansmith/ring#738).
+ring = { git = "https://github.com/oasislabs/ring-sgx", branch = "sgx-target" }
