@@ -1,0 +1,40 @@
+# NOTE: This name appears in GitHub's Checks API and in workflow's status badge.
+name: release
+
+# Trigger the workflow when:
+on:
+  # A push occurs to one of the matched tags.
+  push:
+    tags:
+      # Pattern that roughly matches Cipher ParaTime's version tags.
+      # For more details on GitHub Actions' pattern match syntax, see:
+      # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#patterns-to-match-branches-and-tags.
+      - 'v[0-9]+.[0-9]+*'
+
+jobs:
+
+  prepare-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build tagged release, elf
+        id: build-elf
+        uses: oasisprotocol/oasis-sdk/.github/actions/hash-rust@main
+        with:
+          image: oasisprotocol/runtime-builder:main
+          binaries: cipher-paratime
+          clean: no
+      - name: Build tagged release, sgxs
+        id: build-sgxs
+        uses: oasisprotocol/oasis-sdk/.github/actions/hash-rust@main
+        with:
+          image: oasisprotocol/runtime-builder:main
+          binaries: cipher-paratime.sgxs
+          clean: no
+          sgx: yes
+      - name: Publish the release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ${{ github.workspace }}/${{ steps.build-elf.outputs.build-path }}/cipher-paratime,${{ github.workspace }}/${{ steps.build-sgxs.outputs.build-path }}/cipher-paratime.sgxs
+          token: ${{ secrets.GITHUB_TOKEN }}
