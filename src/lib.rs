@@ -1,19 +1,28 @@
 //! The Cipher ParaTime.
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 
 use oasis_runtime_sdk::{
-    self as sdk,
-    crypto::signature::PublicKey,
-    modules,
+    self as sdk, modules,
     types::token::{BaseUnits, Denomination},
-    Version,
+    Module as _, Version,
 };
+
+/// Configuration for the various modules.
+pub struct Config;
+
+impl module_contracts::Config for Config {
+    type Accounts = modules::accounts::Module;
+}
 
 /// The Cipher ParaTime.
 pub struct Runtime;
 
 impl sdk::Runtime for Runtime {
+    /// Version of the runtime.
     const VERSION: Version = sdk::version_from_cargo!();
+    /// Current version of the global state (e.g. parameters). Any parameter updates should bump
+    /// this version in order for the migrations to be executed.
+    const STATE_VERSION: u32 = 1;
 
     type Modules = (
         // Core.
@@ -26,20 +35,27 @@ impl sdk::Runtime for Runtime {
         modules::consensus_accounts::Module<modules::accounts::Module, modules::consensus::Module>,
         // Rewards.
         modules::rewards::Module<modules::accounts::Module>,
-        // Bridge.
-        bridge::Module<modules::accounts::Module>,
+        // Contracts.
+        module_contracts::Module<Config>,
     );
 
     fn genesis_state() -> <Self::Modules as sdk::module::MigrationHandler>::Genesis {
         (
             modules::core::Genesis {
                 parameters: modules::core::Parameters {
-                    max_batch_gas: 1_000_000,
+                    min_gas_price: {
+                        let mut mgp = BTreeMap::new();
+                        mgp.insert(Denomination::NATIVE, 0);
+                        mgp
+                    },
+                    max_batch_gas: 50_000_000,
                     max_tx_signers: 1,
                     max_multisig_signers: 8,
                     gas_costs: modules::core::GasCosts {
+                        tx_byte: 1,
                         auth_signature: 1_000,
                         auth_multisig_signer: 1_000,
+                        callformat_x25519_deoxysii: 10_000,
                     },
                 },
             },
@@ -68,62 +84,61 @@ impl sdk::Runtime for Runtime {
                 parameters: modules::rewards::Parameters {
                     schedule: modules::rewards::types::RewardSchedule {
                         steps: vec![modules::rewards::types::RewardStep {
-                            // TODO: This is based on the current testnet epoch.
-                            until: 7418 + 24 * 60, // Roughly 60 days.
-                            // TODO: Define proper reward schedule.
-                            amount: BaseUnits::new(10.into(), Denomination::NATIVE),
+                            until: 20_000,
+                            amount: BaseUnits::new(10_000_000_000, Denomination::NATIVE),
                         }],
                     },
                     participation_threshold_numerator: 3,
                     participation_threshold_denominator: 4,
                 },
             },
-            bridge::Genesis {
-                parameters: bridge::Parameters {
-                    witnesses: vec![
-                        PublicKey::Secp256k1("ApGjeGS0wK0iA7rcAtMwKpJv5By8nMFFWllkGd/RTOiN".into()), // Oasis Protocol Foundation
-                        PublicKey::Secp256k1("Ait1frjDUZSSjafXB1ahTLhV8H/rGlq7k94i6AyPMg0i".into()), // cdot
-                    ],
-                    threshold: 2,
-                    local_denominations: {
-                        let mut ld = BTreeSet::new();
-                        ld.insert(Denomination::NATIVE);
-                        ld
-                    },
-                    remote_denominations: {
-                        let mut rd = BTreeMap::new();
-                        rd.insert(
-                            "oETH".parse().unwrap(),
-                            "0000000000000000000000000000000000000000".into(),
-                        );
-                        rd.insert(
-                            "oUSDC".parse().unwrap(),
-                            "07865c6e87b9f70255377e024ace6630c1eaa37f".into(),
-                        );
-                        rd.insert(
-                            "oUSDT".parse().unwrap(),
-                            "471297b3cb1e9f71661e7a92ced4b4b2b6e5b4a2".into(),
-                        );
-                        rd.insert(
-                            "oDAI".parse().unwrap(),
-                            "829de23e270519c5978e350deb0ec5ef8cd6af28".into(),
-                        );
-                        rd.insert(
-                            "oLINK".parse().unwrap(),
-                            "d91633cd725f815085cce509dd6e0f09210a0400".into(),
-                        );
-                        rd.insert(
-                            "oWETH".parse().unwrap(),
-                            "e5a393784df17d9f9f679c013257e06e72c37c0a".into(),
-                        );
-                        rd.insert(
-                            "oWBTC".parse().unwrap(),
-                            "f76eb8c27df517c25b5d5f91498b5c6203bfe55a".into(),
-                        );
-                        rd
+            module_contracts::Genesis {
+                parameters: module_contracts::Parameters {
+                    max_code_size: 256 * 1024, // 256 KiB
+                    max_stack_size: 60 * 1024, // 60 KiB
+                    max_memory_pages: 20,      // 1280 KiB
+
+                    max_subcall_depth: 8,
+                    max_subcall_count: 16,
+
+                    max_result_size_bytes: 1024, // 1 KiB
+                    max_query_size_bytes: 1024,  // 1 KiB
+                    max_storage_key_size_bytes: 64,
+                    max_storage_value_size_bytes: 16 * 1024, // 16 KiB
+
+                    gas_costs: module_contracts::GasCosts {
+                        tx_upload: 1_000,
+                        tx_upload_per_byte: 1,
+                        tx_instantiate: 1_000,
+                        tx_call: 1_000,
+                        tx_upgrade: 1_000,
+
+                        subcall_dispatch: 100,
+
+                        wasm_storage_get_base: 20,
+                        wasm_storage_insert_base: 20,
+                        wasm_storage_remove_base: 20,
+                        wasm_storage_key_byte: 1,
+                        wasm_storage_value_byte: 1,
+                        wasm_env_query_base: 10,
                     },
                 },
             },
         )
+    }
+
+    fn migrate_state<C: sdk::Context>(ctx: &mut C) {
+        // State migration from v0 state by copying over parameters from updated genesis state.
+        let genesis = Self::genesis_state();
+
+        // Core.
+        modules::core::Module::set_params(ctx.runtime_state(), genesis.0.parameters);
+        // Rewards.
+        modules::rewards::Module::<modules::accounts::Module>::set_params(
+            ctx.runtime_state(),
+            genesis.4.parameters,
+        );
+        // Contracts.
+        module_contracts::Module::<Config>::set_params(ctx.runtime_state(), genesis.5.parameters);
     }
 }
