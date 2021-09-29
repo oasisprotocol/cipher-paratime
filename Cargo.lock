@@ -1484,7 +1484,7 @@ dependencies = [
 [[package]]
 name = "oasis-contract-sdk-types"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#2ec656e1f82b3e9d825002227111469ebf3189f9"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#2b4ed0bf7068448c99393764312649bf15a5c285"
 dependencies = [
  "bech32",
  "oasis-cbor",
@@ -1597,7 +1597,7 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#2ec656e1f82b3e9d825002227111469ebf3189f9"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#2b4ed0bf7068448c99393764312649bf15a5c285"
 dependencies = [
  "anyhow",
  "base64",
@@ -1628,7 +1628,7 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk-contracts"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#2ec656e1f82b3e9d825002227111469ebf3189f9"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#2b4ed0bf7068448c99393764312649bf15a5c285"
 dependencies = [
  "anyhow",
  "blake3",
@@ -1647,7 +1647,7 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk-macros"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#2ec656e1f82b3e9d825002227111469ebf3189f9"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#2b4ed0bf7068448c99393764312649bf15a5c285"
 dependencies = [
  "darling",
  "proc-macro2",
@@ -2296,9 +2296,9 @@ dependencies = [
 
 [[package]]
 name = "smallvec"
-version = "1.6.1"
+version = "1.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fe0f37c9e8f3c5a4a66ad655a93c74daac4ad00c441533bf5c6e7990bb42604e"
+checksum = "1ecab6c735a6bb4139c0caafd0cc3635748bbb3acf4550e8138122099251f309"
 
 [[package]]
 name = "snap"
