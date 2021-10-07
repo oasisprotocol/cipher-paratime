@@ -1,6 +1,6 @@
 [package]
 name = "cipher-paratime"
-version = "0.2.0"
+version = "1.0.0"
 authors = ["Oasis Protocol Foundation <info@oasisprotocol.org>"]
 edition = "2018"
 license = "Apache-2.0"
@@ -13,4 +13,3 @@ threads = 6
 
 [dependencies]
 oasis-runtime-sdk = { git = "https://github.com/oasisprotocol/oasis-sdk", branch = "main" }
-module-contracts = { git = "https://github.com/oasisprotocol/oasis-sdk", branch = "main", package = "oasis-runtime-sdk-contracts" }
