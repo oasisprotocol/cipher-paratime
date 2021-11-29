@@ -10,6 +10,7 @@ resolver = "2"
 heap-size = 134217728
 stack-size = 2097152
 threads = 6
+debug = false
 
 [dependencies]
 oasis-runtime-sdk = { git = "https://github.com/oasisprotocol/oasis-sdk", branch = "main" }
