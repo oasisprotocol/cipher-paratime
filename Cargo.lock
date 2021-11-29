@@ -389,7 +389,7 @@ dependencies = [
 
 [[package]]
 name = "cipher-paratime"
-version = "2.0.0-alpha2"
+version = "2.0.0-alpha3"
 dependencies = [
  "oasis-runtime-sdk",
  "oasis-runtime-sdk-contracts",
