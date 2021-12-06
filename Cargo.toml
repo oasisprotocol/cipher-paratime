@@ -1,6 +1,6 @@
 [package]
 name = "cipher-paratime"
-version = "2.0.0-alpha2"
+version = "2.0.0-alpha3"
 authors = ["Oasis Protocol Foundation <info@oasisprotocol.org>"]
 edition = "2018"
 license = "Apache-2.0"
@@ -10,6 +10,7 @@ resolver = "2"
 heap-size = 134217728
 stack-size = 2097152
 threads = 6
+debug = false
 
 [dependencies]
 oasis-runtime-sdk = { git = "https://github.com/oasisprotocol/oasis-sdk", branch = "main" }
