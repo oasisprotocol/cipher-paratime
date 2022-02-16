@@ -1,0 +1,150 @@
+{
+  "nodes": {
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1644229661,
+        "narHash": "sha256-1YdnJAsNy69bpcjuoKdOYQX0YxZBiCYZo4Twxerqv7k=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "3cecb5b042f7f209c56ffd8371b2711a290ec797",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "fortanix-sgx-tools": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": [
+          "rust-overlay"
+        ]
+      },
+      "locked": {
+        "lastModified": 1646375001,
+        "narHash": "sha256-ry597cX8doefLP1GI7f0/pjn2fZ3QjzZLUTGGBxIrx8=",
+        "owner": "sbellem",
+        "repo": "fortanix-sgx-tools",
+        "rev": "fc95e2f5f4adc62fa7c6d8d98f8c5f05613dcea8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sbellem",
+        "repo": "fortanix-sgx-tools",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1646331602,
+        "narHash": "sha256-cRuytTfel52z947yKfJcZU7zbQBgM16qqTf+oJkVwtg=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "ad267cc9cf3d5a6ae63940df31eb31382d6356e6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "oasis-core-tools": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": [
+          "rust-overlay"
+        ]
+      },
+      "locked": {
+        "lastModified": 1646353233,
+        "narHash": "sha256-AJ7fJztp+DTQ7aSe56LlAKjn4kjqt/d9AsU5lsi7yI4=",
+        "owner": "sbellem",
+        "repo": "oasis-core",
+        "rev": "2a58e2b15d202c9fcfca65cd2e14e8f9d7973c4e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sbellem",
+        "ref": "nix",
+        "repo": "oasis-core",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "fortanix-sgx-tools": "fortanix-sgx-tools",
+        "nixpkgs": "nixpkgs",
+        "oasis-core-tools": "oasis-core-tools",
+        "rust-overlay": "rust-overlay",
+        "sgxs-tools": "sgxs-tools"
+      }
+    },
+    "rust-overlay": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1646360880,
+        "narHash": "sha256-Xu/gQO2eqRBOOarjl7XuPdrtKagAGAZDn6AlIRzGUns=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "194016e6b086bfa5965aeb8979c58b93e03e2485",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "sgxs-tools": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": [
+          "rust-overlay"
+        ]
+      },
+      "locked": {
+        "lastModified": 1646374946,
+        "narHash": "sha256-Vc1rq89G8veYNWaGyhkWvx8fvemRNTjuIShH//0U4gc=",
+        "owner": "sbellem",
+        "repo": "sgxs-tools",
+        "rev": "da0b077524627c7cc99d6167a463f3b081ee823b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sbellem",
+        "ref": "ci",
+        "repo": "sgxs-tools",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

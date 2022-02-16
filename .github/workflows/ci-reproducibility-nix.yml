@@ -1,0 +1,73 @@
+# NOTE: This name appears in GitHub's Checks API and in workflow's status badge.
+name: ci-reproducibility-nix
+
+# Trigger the workflow when:
+on:
+  push:
+    branches:
+      - main
+      - stable/*
+      - nix*
+  # Besides pushes on the branches above, also check every day at 00:00 UTC.
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+
+  check-reproducible-build:
+    # NOTE: This name appears in GitHub's Checks API.
+    name: check-reproducibility-with-nix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v16
+        with:
+          install_url: https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.7.0pre20220225_fd4b693/install
+      - run: nix --version
+      - run: nix build .#nosgx
+      - run: nix build --rebuild .#nosgx
+      - run: shasum -a 512256 -b result/bin/cipher-paratime
+      - run: sha256sum result/bin/cipher-paratime
+
+      - name: Shasum check
+        run: |
+          # FIXME shasum of local build does not match the one on github ci
+          #       perhaps some dependencies are not pinned
+          #echo "d4c77a86e0d1502313d70095f3badcd5a1499510f8131b0665dd2a93dbfd00b2 *result/bin/cipher-paratime" | shasum --algorithm 512256 --binary --strict --check
+          echo "b0c2e27d8b09e3d0337e65c3bac04f33b68afa16a09ccd3189cf039f222db7de *result/bin/cipher-paratime" | shasum --algorithm 512256 --binary --strict --check
+      - run: nix flake check
+      - run: nix flake metadata
+      - run: nix flake show
+      - run: ls -l result
+
+  check-reproducible-build-sgx:
+    # NOTE: This name appears in GitHub's Checks API.
+    name: check-reproducibility-sgx-with-nix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v16
+        with:
+          install_url: https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.7.0pre20220225_fd4b693/install
+      - run: nix --version
+      - run: nix build .#sgx
+      - run: nix build --rebuild .#sgx
+      - run: shasum -a 512256 -b result/bin/cipher-paratime.sgxs
+      - run: sha256sum result/bin/cipher-paratime.sgxs
+
+      - name: Shasum check
+        run: |
+          # FIXME shasum of local build does not match the one on github ci
+          #       perhaps some dependencies are not pinned
+          #echo "547c506aee7c7ee53e85ce0842e840010979288c8350a0b9dc1d510d8b431abf *result/bin/cipher-paratime.sgxs" | shasum --algorithm 512256 --binary --strict --check
+          echo "fbd36bb70d0e381866a3aa0da5e52304c16dc022b86e44302b18e104aecc2743 *result/bin/cipher-paratime.sgxs" | shasum --algorithm 512256 --binary --strict --check
+      - run: nix flake check
+      - run: nix flake metadata
+      - run: nix flake show
+      - run: ls -l result

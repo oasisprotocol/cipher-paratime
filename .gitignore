@@ -20,3 +20,6 @@ hfuzz_workspace
 # Coverage files.
 coverage-e2e-*.txt
 
+# nix build
+result
+result-*
