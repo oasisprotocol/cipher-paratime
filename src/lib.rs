@@ -1,5 +1,5 @@
 //! The Cipher ParaTime.
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use oasis_runtime_sdk::{
     self as sdk, modules,
@@ -9,6 +9,17 @@ use oasis_runtime_sdk::{
 
 /// Configuration for the various modules.
 pub struct Config;
+
+impl modules::core::Config for Config {
+    /// Default local minimum gas price configuration that is used in case no overrides are set in
+    /// local per-node configuration.
+    const DEFAULT_LOCAL_MIN_GAS_PRICE: once_cell::unsync::Lazy<BTreeMap<Denomination, u128>> =
+        once_cell::unsync::Lazy::new(|| BTreeMap::from([(Denomination::NATIVE, 10_000_000_000)]));
+
+    /// Methods which are exempt from minimum gas price requirements.
+    const MIN_GAS_PRICE_EXEMPT_METHODS: once_cell::unsync::Lazy<BTreeSet<&'static str>> =
+        once_cell::unsync::Lazy::new(|| BTreeSet::from(["consensus.Deposit"]));
+}
 
 impl module_contracts::Config for Config {
     type Accounts = modules::accounts::Module;
@@ -24,9 +35,12 @@ impl sdk::Runtime for Runtime {
     /// this version in order for the migrations to be executed.
     const STATE_VERSION: u32 = 2;
 
+    type Core = modules::core::Module<Config>;
+
+    #[allow(clippy::type_complexity)]
     type Modules = (
         // Core.
-        modules::core::Module,
+        modules::core::Module<Config>,
         // Accounts.
         modules::accounts::Module,
         // Consensus layer interface.
@@ -143,7 +157,7 @@ impl sdk::Runtime for Runtime {
         let genesis = Self::genesis_state();
 
         // Core.
-        modules::core::Module::set_params(ctx.runtime_state(), genesis.0.parameters);
+        modules::core::Module::<Config>::set_params(ctx.runtime_state(), genesis.0.parameters);
         // Accounts.
         modules::accounts::Module::set_params(ctx.runtime_state(), genesis.1.parameters);
         // Consensus.
