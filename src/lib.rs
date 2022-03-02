@@ -1,5 +1,5 @@
 //! The Cipher ParaTime.
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use oasis_runtime_sdk::{
     self as sdk, modules,
@@ -9,6 +9,8 @@ use oasis_runtime_sdk::{
 
 /// Configuration for the various modules.
 pub struct Config;
+
+impl modules::core::Config for Config {}
 
 impl module_contracts::Config for Config {
     type Accounts = modules::accounts::Module;
@@ -24,9 +26,12 @@ impl sdk::Runtime for Runtime {
     /// this version in order for the migrations to be executed.
     const STATE_VERSION: u32 = 2;
 
+    type Core = modules::core::Module<Config>;
+
+    #[allow(clippy::type_complexity)]
     type Modules = (
         // Core.
-        modules::core::Module,
+        modules::core::Module<Config>,
         // Accounts.
         modules::accounts::Module,
         // Consensus layer interface.
@@ -143,7 +148,7 @@ impl sdk::Runtime for Runtime {
         let genesis = Self::genesis_state();
 
         // Core.
-        modules::core::Module::set_params(ctx.runtime_state(), genesis.0.parameters);
+        modules::core::Module::<Config>::set_params(ctx.runtime_state(), genesis.0.parameters);
         // Accounts.
         modules::accounts::Module::set_params(ctx.runtime_state(), genesis.1.parameters);
         // Consensus.
