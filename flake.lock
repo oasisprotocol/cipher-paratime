@@ -130,16 +130,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1646374946,
+        "lastModified": 1646375519,
         "narHash": "sha256-Vc1rq89G8veYNWaGyhkWvx8fvemRNTjuIShH//0U4gc=",
         "owner": "sbellem",
         "repo": "sgxs-tools",
-        "rev": "da0b077524627c7cc99d6167a463f3b081ee823b",
+        "rev": "de7276756ef0fc28785f9ef7748b02b2c6d5060d",
         "type": "github"
       },
       "original": {
         "owner": "sbellem",
-        "ref": "ci",
         "repo": "sgxs-tools",
         "type": "github"
       }
