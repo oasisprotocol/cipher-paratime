@@ -28,11 +28,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1646375001,
-        "narHash": "sha256-ry597cX8doefLP1GI7f0/pjn2fZ3QjzZLUTGGBxIrx8=",
+        "lastModified": 1646375549,
+        "narHash": "sha256-0DO1NjmV8shWAZUywUEiFV4DRnPuqmsRBUKoKzPrM8k=",
         "owner": "sbellem",
         "repo": "fortanix-sgx-tools",
-        "rev": "fc95e2f5f4adc62fa7c6d8d98f8c5f05613dcea8",
+        "rev": "1feba1667c8b12c94dddd072961963555b629164",
         "type": "github"
       },
       "original": {
@@ -70,11 +70,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1646353233,
-        "narHash": "sha256-AJ7fJztp+DTQ7aSe56LlAKjn4kjqt/d9AsU5lsi7yI4=",
+        "lastModified": 1646378765,
+        "narHash": "sha256-MqV5jBdee4TFkI+J0b9U/s7MTXb3GWeNJjy9go91COU=",
         "owner": "sbellem",
         "repo": "oasis-core",
-        "rev": "2a58e2b15d202c9fcfca65cd2e14e8f9d7973c4e",
+        "rev": "ad6b02ccc7ca5662f5e3697afd8c2a86e2e3c84b",
         "type": "github"
       },
       "original": {
