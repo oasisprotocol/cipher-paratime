@@ -52,5 +52,6 @@ jobs:
       - name: Publish the release
         uses: ncipollo/release-action@v1
         with:
+          draft: true
           artifacts: cipher-paratime.orc
           token: ${{ secrets.GITHUB_TOKEN }}

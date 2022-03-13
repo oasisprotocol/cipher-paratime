@@ -14,7 +14,7 @@ impl modules::core::Config for Config {
     /// Default local minimum gas price configuration that is used in case no overrides are set in
     /// local per-node configuration.
     const DEFAULT_LOCAL_MIN_GAS_PRICE: once_cell::unsync::Lazy<BTreeMap<Denomination, u128>> =
-        once_cell::unsync::Lazy::new(|| BTreeMap::from([(Denomination::NATIVE, 10_000_000_000)]));
+        once_cell::unsync::Lazy::new(|| BTreeMap::from([(Denomination::NATIVE, 10)]));
 
     /// Methods which are exempt from minimum gas price requirements.
     const MIN_GAS_PRICE_EXEMPT_METHODS: once_cell::unsync::Lazy<BTreeSet<&'static str>> =
@@ -33,7 +33,7 @@ impl sdk::Runtime for Runtime {
     const VERSION: Version = sdk::version_from_cargo!();
     /// Current version of the global state (e.g. parameters). Any parameter updates should bump
     /// this version in order for the migrations to be executed.
-    const STATE_VERSION: u32 = 2;
+    const STATE_VERSION: u32 = 3;
 
     type Core = modules::core::Module<Config>;
 
@@ -59,10 +59,10 @@ impl sdk::Runtime for Runtime {
                 parameters: modules::core::Parameters {
                     min_gas_price: {
                         let mut mgp = BTreeMap::new();
-                        mgp.insert(Denomination::NATIVE, 0);
+                        mgp.insert(Denomination::NATIVE, 10);
                         mgp
                     },
-                    max_batch_gas: 50_000_000,
+                    max_batch_gas: 30_000_000,
                     max_tx_signers: 1,
                     max_multisig_signers: 8,
                     gas_costs: modules::core::GasCosts {
@@ -138,11 +138,11 @@ impl sdk::Runtime for Runtime {
 
                         subcall_dispatch: 100,
 
-                        wasm_storage_get_base: 20,
-                        wasm_storage_insert_base: 20,
-                        wasm_storage_remove_base: 20,
-                        wasm_storage_key_byte: 1,
-                        wasm_storage_value_byte: 1,
+                        wasm_storage_get_base: 100,
+                        wasm_storage_insert_base: 20_000,
+                        wasm_storage_remove_base: 10_000,
+                        wasm_storage_key_byte: 100,
+                        wasm_storage_value_byte: 10,
                         wasm_env_query_base: 10,
 
                         wasm_crypto_ecdsa_recover: 20,
