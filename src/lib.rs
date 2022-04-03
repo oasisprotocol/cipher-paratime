@@ -33,7 +33,7 @@ impl sdk::Runtime for Runtime {
     const VERSION: Version = sdk::version_from_cargo!();
     /// Current version of the global state (e.g. parameters). Any parameter updates should bump
     /// this version in order for the migrations to be executed.
-    const STATE_VERSION: u32 = 3;
+    const STATE_VERSION: u32 = 4;
 
     type Core = modules::core::Module<Config>;
 
@@ -128,6 +128,7 @@ impl sdk::Runtime for Runtime {
                     max_query_size_bytes: 1024,  // 1 KiB
                     max_storage_key_size_bytes: 64,
                     max_storage_value_size_bytes: 16 * 1024, // 16 KiB
+                    max_crypto_signature_verify_message_size_bytes: 16 * 1024, // 16KiB
 
                     gas_costs: module_contracts::GasCosts {
                         tx_upload: 1_000,
@@ -146,6 +147,9 @@ impl sdk::Runtime for Runtime {
                         wasm_env_query_base: 10,
 
                         wasm_crypto_ecdsa_recover: 20,
+                        wasm_crypto_signature_verify_ed25519: 20,
+                        wasm_crypto_signature_verify_secp256k1: 20,
+                        wasm_crypto_signature_verify_sr25519: 25,
                     },
                 },
             },
