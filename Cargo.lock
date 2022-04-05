@@ -345,7 +345,7 @@ dependencies = [
 
 [[package]]
 name = "cipher-paratime"
-version = "2.2.0-testnet"
+version = "2.3.0-testnet"
 dependencies = [
  "oasis-runtime-sdk",
  "oasis-runtime-sdk-contracts",
@@ -792,9 +792,9 @@ dependencies = [
 
 [[package]]
 name = "eyre"
-version = "0.6.7"
+version = "0.6.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9289ed2c0440a6536e65119725cf91fc2c6b5e513bfd2e36e1134d7cca6ca12f"
+checksum = "4c2b6b5a29c02cdc822728b7d7b8ae1bab3e3b05d44522770ddd49722eeac7eb"
 dependencies = [
  "indenter",
  "once_cell",
@@ -1214,9 +1214,9 @@ dependencies = [
 
 [[package]]
 name = "lru"
-version = "0.7.3"
+version = "0.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fcb87f3080f6d1d69e8c564c0fcfde1d7aa8cc451ce40cae89479111f03bc0eb"
+checksum = "32613e41de4c47ab04970c348ca7ae7382cf116625755af070b008a15516a889"
 dependencies = [
  "hashbrown",
 ]
@@ -1456,7 +1456,7 @@ dependencies = [
 [[package]]
 name = "oasis-contract-sdk-crypto"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#465213fff5d9d50780ce40c9a2aff54185338340"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#9602001ef4a27eba6b821e1135acab56a12e8041"
 dependencies = [
  "k256",
  "oasis-cbor",
@@ -1466,7 +1466,7 @@ dependencies = [
 [[package]]
 name = "oasis-contract-sdk-types"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#465213fff5d9d50780ce40c9a2aff54185338340"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#9602001ef4a27eba6b821e1135acab56a12e8041"
 dependencies = [
  "bech32",
  "oasis-cbor",
@@ -1477,7 +1477,7 @@ dependencies = [
 [[package]]
 name = "oasis-core-client"
 version = "0.0.0"
-source = "git+https://github.com/oasisprotocol/oasis-core?tag=v22.1#417f8618059099c5c825aef2abd6de452020c72c"
+source = "git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.2#087349c00bd52d237c232684ff2ca2485accf6af"
 dependencies = [
  "anyhow",
  "futures",
@@ -1491,7 +1491,7 @@ dependencies = [
 [[package]]
 name = "oasis-core-keymanager-api-common"
 version = "0.0.0"
-source = "git+https://github.com/oasisprotocol/oasis-core?tag=v22.1#417f8618059099c5c825aef2abd6de452020c72c"
+source = "git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.2#087349c00bd52d237c232684ff2ca2485accf6af"
 dependencies = [
  "anyhow",
  "base64",
@@ -1508,7 +1508,7 @@ dependencies = [
 [[package]]
 name = "oasis-core-keymanager-client"
 version = "0.0.0"
-source = "git+https://github.com/oasisprotocol/oasis-core?tag=v22.1#417f8618059099c5c825aef2abd6de452020c72c"
+source = "git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.2#087349c00bd52d237c232684ff2ca2485accf6af"
 dependencies = [
  "futures",
  "io-context",
@@ -1523,7 +1523,7 @@ dependencies = [
 [[package]]
 name = "oasis-core-runtime"
 version = "0.0.0"
-source = "git+https://github.com/oasisprotocol/oasis-core?tag=v22.1#417f8618059099c5c825aef2abd6de452020c72c"
+source = "git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.2#087349c00bd52d237c232684ff2ca2485accf6af"
 dependencies = [
  "anyhow",
  "arbitrary",
@@ -1579,7 +1579,7 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#465213fff5d9d50780ce40c9a2aff54185338340"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#9602001ef4a27eba6b821e1135acab56a12e8041"
 dependencies = [
  "anyhow",
  "base64",
@@ -1613,7 +1613,7 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk-contracts"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#465213fff5d9d50780ce40c9a2aff54185338340"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#9602001ef4a27eba6b821e1135acab56a12e8041"
 dependencies = [
  "anyhow",
  "blake3",
@@ -1633,7 +1633,7 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk-macros"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#465213fff5d9d50780ce40c9a2aff54185338340"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?branch=main#9602001ef4a27eba6b821e1135acab56a12e8041"
 dependencies = [
  "darling",
  "proc-macro2",
