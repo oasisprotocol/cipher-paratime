@@ -52,6 +52,7 @@ jobs:
       - name: Publish the release
         uses: ncipollo/release-action@v1
         with:
+          # Create a draft since the release requires an offline signing process.
           draft: true
           artifacts: cipher-paratime.orc
           token: ${{ secrets.GITHUB_TOKEN }}
