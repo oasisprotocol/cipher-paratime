@@ -18,6 +18,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Set up Go 1.17
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.17.x"
+
       - name: Build tagged release, elf
         id: build-elf
         uses: oasisprotocol/oasis-sdk/.github/actions/hash-rust@main
@@ -25,6 +31,7 @@ jobs:
           image: oasisprotocol/runtime-builder:main
           binaries: cipher-paratime
           clean: no
+
       - name: Build tagged release, sgxs
         id: build-sgxs
         uses: oasisprotocol/oasis-sdk/.github/actions/hash-rust@main
@@ -33,8 +40,19 @@ jobs:
           binaries: cipher-paratime.sgxs
           clean: no
           sgx: yes
+
+      - name: Create the Oasis Runtime Container
+        run: |
+          go install github.com/oasisprotocol/oasis-sdk/tools/orc@latest
+          orc init ${RUNTIME_EXECUTABLE} --sgx-executable ${RUNTIME_SGXS}
+        env:
+          RUNTIME_EXECUTABLE: ${{ github.workspace }}/${{ steps.build-elf.outputs.build-path }}/cipher-paratime
+          RUNTIME_SGXS: ${{ github.workspace }}/${{ steps.build-sgxs.outputs.build-path }}/cipher-paratime.sgxs
+
       - name: Publish the release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ${{ github.workspace }}/${{ steps.build-elf.outputs.build-path }}/cipher-paratime,${{ github.workspace }}/${{ steps.build-sgxs.outputs.build-path }}/cipher-paratime.sgxs
+          # Create a draft since the release requires an offline signing process.
+          draft: true
+          artifacts: cipher-paratime.orc
           token: ${{ secrets.GITHUB_TOKEN }}
