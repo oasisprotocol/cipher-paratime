@@ -345,7 +345,7 @@ dependencies = [
 
 [[package]]
 name = "cipher-paratime"
-version = "2.3.0-testnet"
+version = "2.4.0-testnet"
 dependencies = [
  "oasis-runtime-sdk",
  "oasis-runtime-sdk-contracts",
