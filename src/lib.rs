@@ -2,13 +2,24 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use oasis_runtime_sdk::{
-    self as sdk, config, modules,
+    self as sdk, config,
+    core::consensus::verifier::TrustRoot,
+    modules,
     types::token::{BaseUnits, Denomination},
     Module as _, Version,
 };
 
 /// Configuration for the various modules.
 pub struct Config;
+
+/// Determine whether the build is for Testnet.
+///
+/// If the crate version has a pre-release component (e.g. 2.4.0-testnet) then the build is
+/// classified as Testnet. If there is no such component (e.g. 2.4.0) then it is classified as
+/// Mainnet.
+const fn is_testnet() -> bool {
+    !env!("CARGO_PKG_VERSION_PRE").is_empty()
+}
 
 impl modules::core::Config for Config {
     /// Default local minimum gas price configuration that is used in case no overrides are set in
@@ -60,6 +71,20 @@ impl sdk::Runtime for Runtime {
         // Contracts.
         module_contracts::Module<Config>,
     );
+
+    fn consensus_trust_root() -> Option<TrustRoot> {
+        if is_testnet() {
+            // Testnet.
+            Some(TrustRoot {
+                height: 9287248,
+                hash: "c43b1c378930d6cd5bbc74bbaf3fdc5414eab1de63c0b3698b7c323e246c3d20".into(),
+                runtime_id: "0000000000000000000000000000000000000000000000000000000000000000"
+                    .into(),
+            })
+        } else {
+            panic!("no trust root defined for Mainnet");
+        }
+    }
 
     fn genesis_state() -> <Self::Modules as sdk::module::MigrationHandler>::Genesis {
         (
