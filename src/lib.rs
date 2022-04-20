@@ -2,7 +2,9 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use oasis_runtime_sdk::{
-    self as sdk, modules,
+    self as sdk, config,
+    core::consensus::verifier::TrustRoot,
+    modules,
     types::token::{BaseUnits, Denomination},
     Module as _, Version,
 };
@@ -10,11 +12,20 @@ use oasis_runtime_sdk::{
 /// Configuration for the various modules.
 pub struct Config;
 
+/// Determine whether the build is for Testnet.
+///
+/// If the crate version has a pre-release component (e.g. 2.4.0-testnet) then the build is
+/// classified as Testnet. If there is no such component (e.g. 2.4.0) then it is classified as
+/// Mainnet.
+const fn is_testnet() -> bool {
+    !env!("CARGO_PKG_VERSION_PRE").is_empty()
+}
+
 impl modules::core::Config for Config {
     /// Default local minimum gas price configuration that is used in case no overrides are set in
     /// local per-node configuration.
     const DEFAULT_LOCAL_MIN_GAS_PRICE: once_cell::unsync::Lazy<BTreeMap<Denomination, u128>> =
-        once_cell::unsync::Lazy::new(|| BTreeMap::from([(Denomination::NATIVE, 10)]));
+        once_cell::unsync::Lazy::new(|| BTreeMap::from([(Denomination::NATIVE, 100)]));
 
     /// Methods which are exempt from minimum gas price requirements.
     const MIN_GAS_PRICE_EXEMPT_METHODS: once_cell::unsync::Lazy<BTreeSet<&'static str>> =
@@ -33,7 +44,15 @@ impl sdk::Runtime for Runtime {
     const VERSION: Version = sdk::version_from_cargo!();
     /// Current version of the global state (e.g. parameters). Any parameter updates should bump
     /// this version in order for the migrations to be executed.
-    const STATE_VERSION: u32 = 4;
+    const STATE_VERSION: u32 = 5;
+
+    /// Schedule control configuration.
+    const SCHEDULE_CONTROL: config::ScheduleControl = config::ScheduleControl {
+        initial_batch_size: 50,
+        batch_size: 50,
+        min_remaining_gas: 1_000, // accounts.Transfer method calls.
+        max_tx_count: 1_000,      // Consistent with runtime descriptor.
+    };
 
     type Core = modules::core::Module<Config>;
 
@@ -53,16 +72,31 @@ impl sdk::Runtime for Runtime {
         module_contracts::Module<Config>,
     );
 
+    fn consensus_trust_root() -> Option<TrustRoot> {
+        if is_testnet() {
+            // Testnet.
+            Some(TrustRoot {
+                height: 9309965,
+                hash: "7ac09466c8eabf634a43c7785a9fad74f9fc62dddda02977071d147eb4e0b382".into(),
+                runtime_id: "0000000000000000000000000000000000000000000000000000000000000000"
+                    .into(),
+            })
+        } else {
+            panic!("no trust root defined for Mainnet");
+        }
+    }
+
     fn genesis_state() -> <Self::Modules as sdk::module::MigrationHandler>::Genesis {
         (
             modules::core::Genesis {
                 parameters: modules::core::Parameters {
                     min_gas_price: {
                         let mut mgp = BTreeMap::new();
-                        mgp.insert(Denomination::NATIVE, 10);
+                        mgp.insert(Denomination::NATIVE, 100);
                         mgp
                     },
                     max_batch_gas: 30_000_000,
+                    max_tx_size: 1024 * 1024,
                     max_tx_signers: 1,
                     max_multisig_signers: 8,
                     gas_costs: modules::core::GasCosts {
@@ -131,11 +165,11 @@ impl sdk::Runtime for Runtime {
                     max_crypto_signature_verify_message_size_bytes: 16 * 1024, // 16KiB
 
                     gas_costs: module_contracts::GasCosts {
-                        tx_upload: 1_000,
-                        tx_upload_per_byte: 1,
-                        tx_instantiate: 1_000,
+                        tx_upload: 1_000_000,
+                        tx_upload_per_byte: 5,
+                        tx_instantiate: 10_000,
                         tx_call: 1_000,
-                        tx_upgrade: 1_000,
+                        tx_upgrade: 10_000,
 
                         subcall_dispatch: 100,
 
