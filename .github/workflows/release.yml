@@ -29,7 +29,8 @@ jobs:
         uses: oasisprotocol/oasis-sdk/.github/actions/hash-rust@main
         with:
           image: oasisprotocol/runtime-builder:main
-          binaries: cipher-paratime
+          pkg-dirs: runtime,keymanager
+          binaries: cipher-paratime,cipher-keymanager
           clean: no
 
       - name: Build tagged release, sgxs
@@ -37,22 +38,33 @@ jobs:
         uses: oasisprotocol/oasis-sdk/.github/actions/hash-rust@main
         with:
           image: oasisprotocol/runtime-builder:main
-          binaries: cipher-paratime.sgxs
+          pkg-dirs: runtime,keymanager
+          binaries: cipher-paratime.sgxs,cipher-keymanager.sgxs
           clean: no
           sgx: yes
 
-      - name: Create the Oasis Runtime Container
+      - name: Create the Oasis Runtime Containers
         run: |
           go install github.com/oasisprotocol/oasis-sdk/tools/orc@latest
-          orc init ${RUNTIME_EXECUTABLE} --sgx-executable ${RUNTIME_SGXS}
+
+          pushd runtime
+          orc init ${RUNTIME_EXECUTABLE} --sgx-executable ${RUNTIME_SGXS} --output ../cipher-paratime.orc
+          popd
+
+          pushd keymanager
+          orc init ${KEYMANAGER_EXECUTABLE} --sgx-executable ${KEYMANAGER_SGXS} --output ../cipher-keymanager.orc
+          popd
         env:
           RUNTIME_EXECUTABLE: ${{ github.workspace }}/${{ steps.build-elf.outputs.build-path }}/cipher-paratime
           RUNTIME_SGXS: ${{ github.workspace }}/${{ steps.build-sgxs.outputs.build-path }}/cipher-paratime.sgxs
+
+          KEYMANAGER_EXECUTABLE: ${{ github.workspace }}/${{ steps.build-elf.outputs.build-path }}/cipher-keymanager
+          KEYMANAGER_SGXS: ${{ github.workspace }}/${{ steps.build-sgxs.outputs.build-path }}/cipher-keymanager.sgxs
 
       - name: Publish the release
         uses: ncipollo/release-action@v1
         with:
           # Create a draft since the release requires an offline signing process.
           draft: true
-          artifacts: cipher-paratime.orc
+          artifacts: cipher-paratime.orc,cipher-keymanager.orc
           token: ${{ secrets.GITHUB_TOKEN }}

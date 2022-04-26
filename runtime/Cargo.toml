@@ -1,6 +1,6 @@
 [package]
 name = "cipher-paratime"
-version = "2.4.0-testnet"
+version = "2.5.0-testnet"
 authors = ["Oasis Protocol Foundation <info@oasisprotocol.org>"]
 edition = "2018"
 license = "Apache-2.0"
@@ -18,6 +18,9 @@ threads = 6
 debug = false
 
 [dependencies]
+cipher-keymanager = { path = "../keymanager" }
+
+# SDK.
 oasis-runtime-sdk = { git = "https://github.com/oasisprotocol/oasis-sdk", rev = "6bd5452f94cfabe59e6291bdc9ccf6426cb9d619" }
 module-contracts = { git = "https://github.com/oasisprotocol/oasis-sdk", rev = "6bd5452f94cfabe59e6291bdc9ccf6426cb9d619", package = "oasis-runtime-sdk-contracts" }
 

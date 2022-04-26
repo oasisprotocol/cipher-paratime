@@ -344,9 +344,19 @@ dependencies = [
 ]
 
 [[package]]
-name = "cipher-paratime"
-version = "2.4.0-testnet"
+name = "cipher-keymanager"
+version = "0.1.0-testnet"
 dependencies = [
+ "oasis-core-keymanager-api-common",
+ "oasis-core-keymanager-lib",
+ "oasis-core-runtime",
+]
+
+[[package]]
+name = "cipher-paratime"
+version = "2.5.0-testnet"
+dependencies = [
+ "cipher-keymanager",
  "oasis-runtime-sdk",
  "oasis-runtime-sdk-contracts",
  "once_cell",
@@ -1518,6 +1528,28 @@ dependencies = [
  "oasis-core-keymanager-api-common",
  "oasis-core-runtime",
  "thiserror",
+]
+
+[[package]]
+name = "oasis-core-keymanager-lib"
+version = "0.0.0"
+source = "git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.2#087349c00bd52d237c232684ff2ca2485accf6af"
+dependencies = [
+ "anyhow",
+ "io-context",
+ "lazy_static",
+ "lru",
+ "oasis-cbor",
+ "oasis-core-keymanager-api-common",
+ "oasis-core-keymanager-client",
+ "oasis-core-runtime",
+ "rand 0.7.3",
+ "sgx-isa",
+ "sp800-185",
+ "tiny-keccak 2.0.2",
+ "tokio",
+ "x25519-dalek",
+ "zeroize",
 ]
 
 [[package]]

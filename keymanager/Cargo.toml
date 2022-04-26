@@ -1,0 +1,22 @@
+[package]
+name = "cipher-keymanager"
+version = "0.1.0-testnet"
+authors = ["Oasis Protocol Foundation <info@oasisprotocol.org>"]
+edition = "2018"
+
+[package.metadata.orc.release]
+runtime-id = "0000000000000000000000000000000000000000000000002223c5592a313de6"
+
+[package.metadata.orc.test]
+runtime-id = "0000000000000000000000000000000000000000000000004a1a53dff2ae482d"
+
+[package.metadata.fortanix-sgx]
+heap-size = 134217728
+stack-size = 2097152
+threads = 6
+debug = false
+
+[dependencies]
+oasis-core-runtime = { git = "https://github.com/oasisprotocol/oasis-core", tag = "v22.1.2" }
+oasis-core-keymanager-lib = { git = "https://github.com/oasisprotocol/oasis-core", tag = "v22.1.2" }
+oasis-core-keymanager-api-common = { git = "https://github.com/oasisprotocol/oasis-core", tag = "v22.1.2" }

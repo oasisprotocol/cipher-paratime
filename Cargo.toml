@@ -1,3 +1,6 @@
 [workspace]
-members = ["runtime"]
+members = [
+	"keymanager",
+	"runtime",
+]
 resolver = "2"

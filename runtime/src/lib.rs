@@ -4,6 +4,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use oasis_runtime_sdk::{
     self as sdk, config,
     core::consensus::verifier::TrustRoot,
+    keymanager::TrustedPolicySigners,
     modules,
     types::token::{BaseUnits, Denomination},
     Module as _, Version,
@@ -72,12 +73,16 @@ impl sdk::Runtime for Runtime {
         module_contracts::Module<Config>,
     );
 
+    fn trusted_policy_signers() -> Option<TrustedPolicySigners> {
+        Some(cipher_keymanager::trusted_policy_signers())
+    }
+
     fn consensus_trust_root() -> Option<TrustRoot> {
         if is_testnet() {
             // Testnet.
             Some(TrustRoot {
-                height: 9309965,
-                hash: "7ac09466c8eabf634a43c7785a9fad74f9fc62dddda02977071d147eb4e0b382".into(),
+                height: 9500687,
+                hash: "9cdd98b0acef04edf3056ce0b66b8323474f8c0048ad15ea6f97c3a4fc27a1d2".into(),
                 runtime_id: "0000000000000000000000000000000000000000000000000000000000000000"
                     .into(),
             })
