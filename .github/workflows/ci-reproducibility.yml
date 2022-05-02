@@ -26,14 +26,16 @@ jobs:
         uses: oasisprotocol/oasis-sdk/.github/actions/hash-rust@main
         with:
           image: oasisprotocol/runtime-builder:main
-          binaries: cipher-paratime
+          pkg-dirs: runtime,keymanager
+          binaries: cipher-paratime,cipher-keymanager
 
       - name: Build runtime, 2.
         id: build-2
         uses: oasisprotocol/oasis-sdk/.github/actions/hash-rust@main
         with:
           image: oasisprotocol/runtime-builder:main
-          binaries: cipher-paratime
+          pkg-dirs: runtime,keymanager
+          binaries: cipher-paratime,cipher-keymanager
 
       - name: Check binary equality
         run: |
@@ -52,7 +54,8 @@ jobs:
         uses: oasisprotocol/oasis-sdk/.github/actions/hash-rust@main
         with:
           image: oasisprotocol/runtime-builder:main
-          binaries: cipher-paratime.sgxs
+          pkg-dirs: runtime,keymanager
+          binaries: cipher-paratime.sgxs,cipher-keymanager.sgxs
           sgx: yes
 
       - name: Build runtime, 2.
@@ -60,7 +63,8 @@ jobs:
         uses: oasisprotocol/oasis-sdk/.github/actions/hash-rust@main
         with:
           image: oasisprotocol/runtime-builder:main
-          binaries: cipher-paratime.sgxs
+          pkg-dirs: runtime,keymanager
+          binaries: cipher-paratime.sgxs,cipher-keymanager.sgxs
           sgx: yes
 
       - name: Check binary equality
