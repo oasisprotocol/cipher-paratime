@@ -17,6 +17,6 @@ threads = 6
 debug = false
 
 [dependencies]
-oasis-core-runtime = { git = "https://github.com/oasisprotocol/oasis-core", tag = "v22.1.2" }
-oasis-core-keymanager-lib = { git = "https://github.com/oasisprotocol/oasis-core", tag = "v22.1.2" }
-oasis-core-keymanager-api-common = { git = "https://github.com/oasisprotocol/oasis-core", tag = "v22.1.2" }
+oasis-core-runtime = { git = "https://github.com/oasisprotocol/oasis-core", tag = "v22.1.5" }
+oasis-core-keymanager-lib = { git = "https://github.com/oasisprotocol/oasis-core", tag = "v22.1.5" }
+oasis-core-keymanager-api-common = { git = "https://github.com/oasisprotocol/oasis-core", tag = "v22.1.5" }
