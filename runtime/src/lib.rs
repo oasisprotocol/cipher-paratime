@@ -1,9 +1,10 @@
 //! The Cipher ParaTime.
 use std::collections::{BTreeMap, BTreeSet};
 
+#[cfg(target_env = "sgx")]
+use oasis_runtime_sdk::core::consensus::verifier::TrustRoot;
 use oasis_runtime_sdk::{
     self as sdk, config,
-    core::consensus::verifier::TrustRoot,
     keymanager::TrustedPolicySigners,
     modules,
     types::token::{BaseUnits, Denomination},
@@ -18,6 +19,7 @@ pub struct Config;
 /// If the crate version has a pre-release component (e.g. 2.4.0-testnet) then the build is
 /// classified as Testnet. If there is no such component (e.g. 2.4.0) then it is classified as
 /// Mainnet.
+#[cfg_attr(not(target_env = "sgx"), allow(unused))]
 const fn is_testnet() -> bool {
     !env!("CARGO_PKG_VERSION_PRE").is_empty()
 }
@@ -77,6 +79,7 @@ impl sdk::Runtime for Runtime {
         Some(cipher_keymanager::trusted_policy_signers())
     }
 
+    #[cfg(target_env = "sgx")]
     fn consensus_trust_root() -> Option<TrustRoot> {
         if is_testnet() {
             // Testnet.
