@@ -39,8 +39,8 @@ they cannot see its confidential state.
 #### Rust
 
 Ensure you have [Rust] and [rustup] installed on your system.
-For more details, see [Oasis Core's Prerequisites] documentation, the Rust
-section.
+For more details, see [Oasis Core's Development Setup Prerequisites]
+documentation, the Rust section.
 
 The version of the Rust toolchain we use for the Cipher ParaTime is specified in
 the [rust-toolchain] file.
@@ -79,11 +79,37 @@ rustup target add x86_64-fortanix-unknown-sgx
 
 [Rust]: https://www.rust-lang.org/
 [rustup]: https://rustup.rs/
-[Oasis Core's Prerequisites]:
-  https://docs.oasis.dev/oasis-core/development-setup/build-environment-setup-and-building/prerequisites
+[Oasis Core's Development Setup Prerequisites]:
+  https://docs.oasis.dev/oasis-core/development-setup/prerequisites
 [rust-toolchain]: rust-toolchain
 [rust-toolchain-precedence]:
   https://github.com/rust-lang/rustup/blob/master/README.md#override-precedence
+
+#### System Packages
+
+Building Cipher ParaTime requires the following system packages:
+
+- [GCC]
+- [Clang] (for compiling the [wasm3-rs] crates)
+
+_NOTE: On Ubuntu/Debian systems, compiling [wasm3-rs] crates when building the
+SGX binary requires having the `gcc-multilib` package installed._
+
+On Fedora 35+, you can install the above with:
+
+```
+sudo dnf install gcc clang
+```
+
+On Ubuntu 20.04+, you can install the above with:
+
+```
+sudo apt install gcc gcc-multilib clang
+```
+
+[GCC]: http://gcc.gnu.org/
+[Clang]: https://clang.llvm.org/
+[wasm3-rs]: https://github.com/wasm3/wasm3-rs
 
 ### Non-SGX Binary
 
