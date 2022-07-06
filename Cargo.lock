@@ -165,6 +165,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf9ff0bbfd639f15c74af777d81383cf53efb7c93613f6cab67c6c11e05bbf8b"
 
 [[package]]
+name = "bech32"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c5738be7561b0eeb501ef1d5c5db3f24e01ceb55fededd9b00039aada34966ad"
+
+[[package]]
 name = "bincode"
 version = "1.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -213,17 +219,16 @@ dependencies = [
 
 [[package]]
 name = "blake3"
-version = "1.2.0"
+version = "1.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "526c210b4520e416420759af363083471656e819a75e831b8d2c9d5a584f2413"
+checksum = "a08e53fc5a564bb15bfe6fae56bd71522205f1f91893f9c0116edad6496c183f"
 dependencies = [
  "arrayref",
  "arrayvec",
  "cc",
  "cfg-if 1.0.0",
  "constant_time_eq",
- "crypto-mac",
- "digest 0.9.0",
+ "digest 0.10.3",
 ]
 
 [[package]]
@@ -347,9 +352,9 @@ dependencies = [
 name = "cipher-keymanager"
 version = "0.1.0-testnet"
 dependencies = [
- "oasis-core-keymanager-api-common",
+ "oasis-core-keymanager-api-common 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.5)",
  "oasis-core-keymanager-lib",
- "oasis-core-runtime",
+ "oasis-core-runtime 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.5)",
 ]
 
 [[package]]
@@ -608,8 +613,18 @@ version = "0.13.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a01d95850c592940db9b8194bc39f4bc0e89dee5c4265e4b1807c34a9aba453c"
 dependencies = [
- "darling_core",
- "darling_macro",
+ "darling_core 0.13.4",
+ "darling_macro 0.13.4",
+]
+
+[[package]]
+name = "darling"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4529658bdda7fd6769b8614be250cdcfc3aeb0ee72fe66f9e41e5e5eb73eac02"
+dependencies = [
+ "darling_core 0.14.1",
+ "darling_macro 0.14.1",
 ]
 
 [[package]]
@@ -627,12 +642,37 @@ dependencies = [
 ]
 
 [[package]]
+name = "darling_core"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "649c91bc01e8b1eac09fb91e8dbc7d517684ca6be8ebc75bb9cafc894f9fdb6f"
+dependencies = [
+ "fnv",
+ "ident_case",
+ "proc-macro2",
+ "quote",
+ "strsim 0.10.0",
+ "syn",
+]
+
+[[package]]
 name = "darling_macro"
 version = "0.13.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c972679f83bdf9c42bd905396b6c3588a843a17f0f16dfcfa3e2c5d57441835"
 dependencies = [
- "darling_core",
+ "darling_core 0.13.4",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "darling_macro"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ddfc69c5bfcbd2fc09a0f38451d2daf0e372e367986a83906d1b0dbc88134fb5"
+dependencies = [
+ "darling_core 0.14.1",
  "quote",
  "syn",
 ]
@@ -1151,7 +1191,7 @@ dependencies = [
  "ecdsa",
  "elliptic-curve",
  "sha2 0.9.9",
- "sha3",
+ "sha3 0.9.1",
 ]
 
 [[package]]
@@ -1455,7 +1495,7 @@ version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "329dfab5a691b5059ca211567f795876ad49ebd2cd14ab8680e18c17f4f1a805"
 dependencies = [
- "darling",
+ "darling 0.13.4",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -1466,7 +1506,7 @@ dependencies = [
 [[package]]
 name = "oasis-contract-sdk-crypto"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?rev=cca69ecc53bfa3909198aae5ed4f7af6662cd39b#cca69ecc53bfa3909198aae5ed4f7af6662cd39b"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?rev=b4efbe8416329502a8c12684c0b750c7561a992b#b4efbe8416329502a8c12684c0b750c7561a992b"
 dependencies = [
  "k256",
  "oasis-cbor",
@@ -1476,9 +1516,9 @@ dependencies = [
 [[package]]
 name = "oasis-contract-sdk-types"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?rev=cca69ecc53bfa3909198aae5ed4f7af6662cd39b#cca69ecc53bfa3909198aae5ed4f7af6662cd39b"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?rev=b4efbe8416329502a8c12684c0b750c7561a992b#b4efbe8416329502a8c12684c0b750c7561a992b"
 dependencies = [
- "bech32",
+ "bech32 0.9.0",
  "oasis-cbor",
  "oasis-runtime-sdk",
  "thiserror",
@@ -1493,7 +1533,21 @@ dependencies = [
  "futures",
  "io-context",
  "oasis-cbor",
- "oasis-core-runtime",
+ "oasis-core-runtime 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.5)",
+ "thiserror",
+ "tokio",
+]
+
+[[package]]
+name = "oasis-core-client"
+version = "0.0.0"
+source = "git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.8#c94a7fa2c9532cda579d595eeb457a559bdf8013"
+dependencies = [
+ "anyhow",
+ "futures",
+ "io-context",
+ "oasis-cbor",
+ "oasis-core-runtime 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.8)",
  "thiserror",
  "tokio",
 ]
@@ -1507,7 +1561,24 @@ dependencies = [
  "base64",
  "lazy_static",
  "oasis-cbor",
- "oasis-core-runtime",
+ "oasis-core-runtime 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.5)",
+ "rand 0.7.3",
+ "rustc-hex",
+ "thiserror",
+ "x25519-dalek",
+ "zeroize",
+]
+
+[[package]]
+name = "oasis-core-keymanager-api-common"
+version = "0.0.0"
+source = "git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.8#c94a7fa2c9532cda579d595eeb457a559bdf8013"
+dependencies = [
+ "anyhow",
+ "base64",
+ "lazy_static",
+ "oasis-cbor",
+ "oasis-core-runtime 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.8)",
  "rand 0.7.3",
  "rustc-hex",
  "thiserror",
@@ -1524,9 +1595,24 @@ dependencies = [
  "io-context",
  "lru",
  "oasis-cbor",
- "oasis-core-client",
- "oasis-core-keymanager-api-common",
- "oasis-core-runtime",
+ "oasis-core-client 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.5)",
+ "oasis-core-keymanager-api-common 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.5)",
+ "oasis-core-runtime 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.5)",
+ "thiserror",
+]
+
+[[package]]
+name = "oasis-core-keymanager-client"
+version = "0.0.0"
+source = "git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.8#c94a7fa2c9532cda579d595eeb457a559bdf8013"
+dependencies = [
+ "futures",
+ "io-context",
+ "lru",
+ "oasis-cbor",
+ "oasis-core-client 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.8)",
+ "oasis-core-keymanager-api-common 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.8)",
+ "oasis-core-runtime 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.8)",
  "thiserror",
 ]
 
@@ -1540,9 +1626,9 @@ dependencies = [
  "lazy_static",
  "lru",
  "oasis-cbor",
- "oasis-core-keymanager-api-common",
- "oasis-core-keymanager-client",
- "oasis-core-runtime",
+ "oasis-core-keymanager-api-common 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.5)",
+ "oasis-core-keymanager-client 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.5)",
+ "oasis-core-runtime 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.5)",
  "rand 0.7.3",
  "sgx-isa",
  "sp800-185",
@@ -1561,7 +1647,63 @@ dependencies = [
  "arbitrary",
  "base64",
  "base64-serde",
- "bech32",
+ "bech32 0.8.1",
+ "bincode",
+ "byteorder",
+ "chrono",
+ "crossbeam",
+ "curve25519-dalek 3.2.0",
+ "deoxysii",
+ "ed25519-dalek",
+ "futures",
+ "hmac",
+ "honggfuzz",
+ "impl-trait-for-tuples",
+ "intrusive-collections",
+ "io-context",
+ "lazy_static",
+ "log",
+ "lru",
+ "num-bigint",
+ "num-traits",
+ "oasis-cbor",
+ "oid-registry",
+ "percent-encoding",
+ "rand 0.7.3",
+ "rsa",
+ "rustc-hex",
+ "serde",
+ "serde_json",
+ "sgx-isa",
+ "sha2 0.9.9",
+ "slog",
+ "slog-json",
+ "slog-scope",
+ "slog-stdlog",
+ "snow",
+ "sp800-185",
+ "tendermint",
+ "tendermint-light-client",
+ "tendermint-proto",
+ "tendermint-rpc",
+ "thiserror",
+ "tiny-keccak 2.0.2",
+ "tokio",
+ "x25519-dalek",
+ "x509-parser",
+ "zeroize",
+]
+
+[[package]]
+name = "oasis-core-runtime"
+version = "0.0.0"
+source = "git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.8#c94a7fa2c9532cda579d595eeb457a559bdf8013"
+dependencies = [
+ "anyhow",
+ "arbitrary",
+ "base64",
+ "base64-serde",
+ "bech32 0.8.1",
  "bincode",
  "byteorder",
  "chrono",
@@ -1611,14 +1753,14 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?rev=cca69ecc53bfa3909198aae5ed4f7af6662cd39b#cca69ecc53bfa3909198aae5ed4f7af6662cd39b"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?rev=b4efbe8416329502a8c12684c0b750c7561a992b#b4efbe8416329502a8c12684c0b750c7561a992b"
 dependencies = [
  "anyhow",
  "base64",
- "bech32",
+ "bech32 0.9.0",
  "byteorder",
  "curve25519-dalek 3.2.0",
- "digest 0.9.0",
+ "digest 0.10.3",
  "hex",
  "hmac",
  "impl-trait-for-tuples",
@@ -1626,15 +1768,15 @@ dependencies = [
  "k256",
  "num-traits",
  "oasis-cbor",
- "oasis-core-client",
- "oasis-core-keymanager-api-common",
- "oasis-core-keymanager-client",
- "oasis-core-runtime",
+ "oasis-core-client 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.8)",
+ "oasis-core-keymanager-api-common 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.8)",
+ "oasis-core-keymanager-client 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.8)",
+ "oasis-core-runtime 0.0.0 (git+https://github.com/oasisprotocol/oasis-core?tag=v22.1.8)",
  "oasis-runtime-sdk-macros",
  "once_cell",
  "schnorrkel",
  "sha2 0.9.9",
- "sha3",
+ "sha3 0.10.1",
  "slog",
  "thiserror",
  "tiny-keccak 2.0.2",
@@ -1645,7 +1787,7 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk-contracts"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?rev=cca69ecc53bfa3909198aae5ed4f7af6662cd39b#cca69ecc53bfa3909198aae5ed4f7af6662cd39b"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?rev=b4efbe8416329502a8c12684c0b750c7561a992b#b4efbe8416329502a8c12684c0b750c7561a992b"
 dependencies = [
  "anyhow",
  "blake3",
@@ -1665,9 +1807,9 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk-macros"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?rev=cca69ecc53bfa3909198aae5ed4f7af6662cd39b#cca69ecc53bfa3909198aae5ed4f7af6662cd39b"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?rev=b4efbe8416329502a8c12684c0b750c7561a992b#b4efbe8416329502a8c12684c0b750c7561a992b"
 dependencies = [
- "darling",
+ "darling 0.14.1",
  "proc-macro2",
  "quote",
  "syn",
@@ -2221,6 +2363,16 @@ dependencies = [
  "digest 0.9.0",
  "keccak",
  "opaque-debug",
+]
+
+[[package]]
+name = "sha3"
+version = "0.10.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "881bf8156c87b6301fc5ca6b27f11eeb2761224c7081e69b409d5a1951a70c86"
+dependencies = [
+ "digest 0.10.3",
+ "keccak",
 ]
 
 [[package]]

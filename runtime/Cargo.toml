@@ -21,8 +21,8 @@ debug = false
 cipher-keymanager = { path = "../keymanager" }
 
 # SDK.
-oasis-runtime-sdk = { git = "https://github.com/oasisprotocol/oasis-sdk", rev = "cca69ecc53bfa3909198aae5ed4f7af6662cd39b" }
-module-contracts = { git = "https://github.com/oasisprotocol/oasis-sdk", rev = "cca69ecc53bfa3909198aae5ed4f7af6662cd39b", package = "oasis-runtime-sdk-contracts" }
+oasis-runtime-sdk = { git = "https://github.com/oasisprotocol/oasis-sdk", rev = "b4efbe8416329502a8c12684c0b750c7561a992b" }
+module-contracts = { git = "https://github.com/oasisprotocol/oasis-sdk", rev = "b4efbe8416329502a8c12684c0b750c7561a992b", package = "oasis-runtime-sdk-contracts" }
 
 # Third party.
 once_cell = "1.8.0"
