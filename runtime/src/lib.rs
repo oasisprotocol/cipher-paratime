@@ -47,7 +47,7 @@ impl sdk::Runtime for Runtime {
     const VERSION: Version = sdk::version_from_cargo!();
     /// Current version of the global state (e.g. parameters). Any parameter updates should bump
     /// this version in order for the migrations to be executed.
-    const STATE_VERSION: u32 = 5;
+    const STATE_VERSION: u32 = 6;
 
     /// Schedule control configuration.
     const SCHEDULE_CONTROL: config::ScheduleControl = config::ScheduleControl {
@@ -84,8 +84,8 @@ impl sdk::Runtime for Runtime {
         if is_testnet() {
             // Testnet.
             Some(TrustRoot {
-                height: 9500687,
-                hash: "9cdd98b0acef04edf3056ce0b66b8323474f8c0048ad15ea6f97c3a4fc27a1d2".into(),
+                height: 11379296,
+                hash: "4a854864c82e3214bf560377d7a84650402ad0f5f4d2097f22f89757f95c6ade".into(),
                 runtime_id: "0000000000000000000000000000000000000000000000000000000000000000"
                     .into(),
             })
@@ -178,6 +178,7 @@ impl sdk::Runtime for Runtime {
                         tx_instantiate: 10_000,
                         tx_call: 1_000,
                         tx_upgrade: 10_000,
+                        tx_change_upgrade_policy: 1_000,
 
                         subcall_dispatch: 100,
 
