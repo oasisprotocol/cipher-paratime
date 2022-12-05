@@ -18,11 +18,11 @@ threads = 6
 debug = false
 
 [dependencies]
-cipher-keymanager = { path = "../keymanager" }
+keymanager = { git = "https://github.com/oasisprotocol/keymanager-paratime", tag = "v0.3.2-testnet" }
 
 # SDK.
-oasis-runtime-sdk = { git = "https://github.com/oasisprotocol/oasis-sdk", rev = "b8e5f8f8c725eaf28f643f221930b55775b5a765" }
-module-contracts = { git = "https://github.com/oasisprotocol/oasis-sdk", rev = "b8e5f8f8c725eaf28f643f221930b55775b5a765", package = "oasis-runtime-sdk-contracts" }
+oasis-runtime-sdk = { git = "https://github.com/oasisprotocol/oasis-sdk", rev = "04944cbb7a3cf346acb2693b0a7dfda4ab0f9f63" }
+module-contracts = { git = "https://github.com/oasisprotocol/oasis-sdk", rev = "04944cbb7a3cf346acb2693b0a7dfda4ab0f9f63", package = "oasis-runtime-sdk-contracts" }
 
 # Third party.
 once_cell = "1.8.0"

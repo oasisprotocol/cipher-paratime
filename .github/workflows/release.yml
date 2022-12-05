@@ -19,18 +19,38 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Go 1.17
+      - name: Set up Go 1.18
         uses: actions/setup-go@v3
         with:
-          go-version: "1.17.x"
+          go-version: "1.18.x"
+
+      - name: Build tagged release, elf, debug
+        id: build-debug-elf
+        uses: oasisprotocol/oasis-sdk/.github/actions/hash-rust@main
+        with:
+          image: oasisprotocol/runtime-builder:main
+          pkg-dirs: runtime
+          binaries: cipher-paratime
+          clean: no
+          setup: |
+            export OASIS_UNSAFE_SKIP_AVR_VERIFY=1 OASIS_UNSAFE_SKIP_KM_POLICY=1 OASIS_UNSAFE_ALLOW_DEBUG_ENCLAVES=1
+
+      - name: Create the debug Oasis Runtime Container
+        run: |
+          go install github.com/oasisprotocol/oasis-sdk/tools/orc@latest
+          pushd runtime
+          orc init ${RUNTIME_EXECUTABLE} --output ../insecure-debug-cipher-paratime.orc
+          popd
+        env:
+          RUNTIME_EXECUTABLE: ${{ github.workspace }}/${{ steps.build-debug-elf.outputs.build-path }}/cipher-paratime
 
       - name: Build tagged release, elf
         id: build-elf
         uses: oasisprotocol/oasis-sdk/.github/actions/hash-rust@main
         with:
           image: oasisprotocol/runtime-builder:main
-          pkg-dirs: runtime,keymanager
-          binaries: cipher-paratime,cipher-keymanager
+          pkg-dirs: runtime
+          binaries: cipher-paratime
           clean: no
 
       - name: Build tagged release, sgxs
@@ -38,33 +58,26 @@ jobs:
         uses: oasisprotocol/oasis-sdk/.github/actions/hash-rust@main
         with:
           image: oasisprotocol/runtime-builder:main
-          pkg-dirs: runtime,keymanager
-          binaries: cipher-paratime.sgxs,cipher-keymanager.sgxs
+          pkg-dirs: runtime
+          binaries: cipher-paratime.sgxs
           clean: no
           sgx: yes
 
-      - name: Create the Oasis Runtime Containers
+      - name: Create the Oasis Runtime Container
         run: |
           go install github.com/oasisprotocol/oasis-sdk/tools/orc@latest
 
           pushd runtime
           orc init ${RUNTIME_EXECUTABLE} --sgx-executable ${RUNTIME_SGXS} --output ../cipher-paratime.orc
           popd
-
-          pushd keymanager
-          orc init ${KEYMANAGER_EXECUTABLE} --sgx-executable ${KEYMANAGER_SGXS} --output ../cipher-keymanager.orc
-          popd
         env:
           RUNTIME_EXECUTABLE: ${{ github.workspace }}/${{ steps.build-elf.outputs.build-path }}/cipher-paratime
           RUNTIME_SGXS: ${{ github.workspace }}/${{ steps.build-sgxs.outputs.build-path }}/cipher-paratime.sgxs
-
-          KEYMANAGER_EXECUTABLE: ${{ github.workspace }}/${{ steps.build-elf.outputs.build-path }}/cipher-keymanager
-          KEYMANAGER_SGXS: ${{ github.workspace }}/${{ steps.build-sgxs.outputs.build-path }}/cipher-keymanager.sgxs
 
       - name: Publish the release
         uses: ncipollo/release-action@v1
         with:
           # Create a draft since the release requires an offline signing process.
           draft: true
-          artifacts: cipher-paratime.orc,cipher-keymanager.orc
+          artifacts: cipher-paratime.orc
           token: ${{ secrets.GITHUB_TOKEN }}

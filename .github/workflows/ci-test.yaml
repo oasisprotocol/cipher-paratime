@@ -21,28 +21,32 @@ jobs:
     # NOTE: This name appears in GitHub's Checks API.
     name: test-rust
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./runtime
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          components: rustfmt # rustfmt is required for macros tests.
+        run: rustup show
+
+      - name: Install protoc
+        run: sudo apt install -y protobuf-compiler
 
       - name: Build
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release
+        run: cargo build --release --locked
 
   test-rust-sgx:
     # NOTE: This name appears in GitHub's Checks API.
     name: test-rust-sgx
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./runtime
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # gcc-multilib is required for bindgen to work for SGX.
       - name: Install dependencies
@@ -51,13 +55,7 @@ jobs:
           sudo apt-get install gcc-multilib
 
       - name: Set up Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          components: rustfmt # rustfmt is required for macros tests.
-          target: x86_64-fortanix-unknown-sgx
+        run: rustup show
 
-      - name: Build for SGX
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release --target x86_64-fortanix-unknown-sgx
+      - name: Check SGX buildability
+        run: cargo check --locked --release --target x86_64-fortanix-unknown-sgx

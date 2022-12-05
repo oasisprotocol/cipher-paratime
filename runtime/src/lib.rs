@@ -5,6 +5,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use oasis_runtime_sdk::core::consensus::verifier::TrustRoot;
 use oasis_runtime_sdk::{
     self as sdk, config,
+    core::common::crypto::signature::PublicKey,
     keymanager::TrustedPolicySigners,
     modules,
     types::token::{BaseUnits, Denomination},
@@ -22,6 +23,18 @@ pub struct Config;
 #[cfg_attr(not(target_env = "sgx"), allow(unused))]
 const fn is_testnet() -> bool {
     !env!("CARGO_PKG_VERSION_PRE").is_empty()
+}
+
+/// Determine state version on weather the build is for Testnet or Mainnet.
+#[allow(clippy::if_same_then_else)]
+const fn state_version() -> u32 {
+    if is_testnet() {
+        // Testnet.
+        6
+    } else {
+        // Mainnet.
+        2
+    }
 }
 
 impl modules::core::Config for Config {
@@ -47,14 +60,14 @@ impl sdk::Runtime for Runtime {
     const VERSION: Version = sdk::version_from_cargo!();
     /// Current version of the global state (e.g. parameters). Any parameter updates should bump
     /// this version in order for the migrations to be executed.
-    const STATE_VERSION: u32 = 6;
+    const STATE_VERSION: u32 = state_version();
 
     /// Schedule control configuration.
     const SCHEDULE_CONTROL: config::ScheduleControl = config::ScheduleControl {
         initial_batch_size: 50,
         batch_size: 50,
-        min_remaining_gas: 1_000, // accounts.Transfer method calls.
-        max_tx_count: 1_000,      // Consistent with runtime descriptor.
+        min_remaining_gas: 30_000, // accounts.Transfer method calls.
+        max_tx_count: 1_000,       // Consistent with runtime descriptor.
     };
 
     type Core = modules::core::Module<Config>;
@@ -76,7 +89,17 @@ impl sdk::Runtime for Runtime {
     );
 
     fn trusted_policy_signers() -> Option<TrustedPolicySigners> {
-        Some(cipher_keymanager::trusted_policy_signers())
+        #[allow(clippy::partialeq_to_none)]
+        if option_env!("OASIS_UNSAFE_SKIP_KM_POLICY") == Some("1") {
+            return Some(TrustedPolicySigners::default());
+        }
+        let tps = keymanager::trusted_policy_signers();
+        // The `keymanager` crate may use a different version of `oasis_core`
+        // so we need to convert the `TrustedPolicySigners` between the versions.
+        Some(TrustedPolicySigners {
+            signers: tps.signers.into_iter().map(|s| PublicKey(s.0)).collect(),
+            threshold: tps.threshold,
+        })
     }
 
     #[cfg(target_env = "sgx")]
@@ -88,6 +111,8 @@ impl sdk::Runtime for Runtime {
                 hash: "4a854864c82e3214bf560377d7a84650402ad0f5f4d2097f22f89757f95c6ade".into(),
                 runtime_id: "0000000000000000000000000000000000000000000000000000000000000000"
                     .into(),
+                chain_context: "50304f98ddb656620ea817cc1446c401752a05a249b36c9b90dba4616829977a"
+                    .to_string(),
             })
         } else {
             panic!("no trust root defined for Mainnet");
@@ -100,24 +125,26 @@ impl sdk::Runtime for Runtime {
                 parameters: modules::core::Parameters {
                     min_gas_price: {
                         let mut mgp = BTreeMap::new();
-                        mgp.insert(Denomination::NATIVE, 100);
+                        mgp.insert(Denomination::NATIVE, 5);
                         mgp
                     },
-                    max_batch_gas: 30_000_000,
+                    max_batch_gas: 1_000_000_000,
                     max_tx_size: 1024 * 1024,
                     max_tx_signers: 1,
                     max_multisig_signers: 8,
                     gas_costs: modules::core::GasCosts {
                         tx_byte: 1,
-                        auth_signature: 1_000,
-                        auth_multisig_signer: 1_000,
-                        callformat_x25519_deoxysii: 10_000,
+                        auth_signature: 100_000,
+                        auth_multisig_signer: 100_000,
+                        callformat_x25519_deoxysii: 50_000,
                     },
                 },
             },
             modules::accounts::Genesis {
                 parameters: modules::accounts::Parameters {
-                    gas_costs: modules::accounts::GasCosts { tx_transfer: 1_000 },
+                    gas_costs: modules::accounts::GasCosts {
+                        tx_transfer: 30_000,
+                    },
                     denomination_infos: {
                         let mut denomination_infos = BTreeMap::new();
                         denomination_infos.insert(
@@ -140,8 +167,8 @@ impl sdk::Runtime for Runtime {
             modules::consensus_accounts::Genesis {
                 parameters: modules::consensus_accounts::Parameters {
                     gas_costs: modules::consensus_accounts::GasCosts {
-                        tx_deposit: 10_000,
-                        tx_withdraw: 10_000,
+                        tx_deposit: 300_000,
+                        tx_withdraw: 300_000,
                     },
                 },
             },
@@ -159,41 +186,9 @@ impl sdk::Runtime for Runtime {
             },
             module_contracts::Genesis {
                 parameters: module_contracts::Parameters {
-                    max_code_size: 1024 * 1024, // 1 MiB
-                    max_stack_size: 60 * 1024,  // 60 KiB
-                    max_memory_pages: 20,       // 1280 KiB
+                    max_memory_pages: 20, // 1280 KiB
 
-                    max_subcall_depth: 8,
-                    max_subcall_count: 16,
-
-                    max_result_size_bytes: 1024, // 1 KiB
-                    max_query_size_bytes: 1024,  // 1 KiB
-                    max_storage_key_size_bytes: 64,
-                    max_storage_value_size_bytes: 16 * 1024, // 16 KiB
-                    max_crypto_signature_verify_message_size_bytes: 16 * 1024, // 16KiB
-
-                    gas_costs: module_contracts::GasCosts {
-                        tx_upload: 1_000_000,
-                        tx_upload_per_byte: 5,
-                        tx_instantiate: 10_000,
-                        tx_call: 1_000,
-                        tx_upgrade: 10_000,
-                        tx_change_upgrade_policy: 1_000,
-
-                        subcall_dispatch: 100,
-
-                        wasm_storage_get_base: 100,
-                        wasm_storage_insert_base: 20_000,
-                        wasm_storage_remove_base: 10_000,
-                        wasm_storage_key_byte: 100,
-                        wasm_storage_value_byte: 10,
-                        wasm_env_query_base: 10,
-
-                        wasm_crypto_ecdsa_recover: 20,
-                        wasm_crypto_signature_verify_ed25519: 20,
-                        wasm_crypto_signature_verify_secp256k1: 20,
-                        wasm_crypto_signature_verify_sr25519: 25,
-                    },
+                    ..Default::default()
                 },
             },
         )
