@@ -1,6 +1,5 @@
 [workspace]
 members = [
-	"keymanager",
 	"runtime",
 ]
 resolver = "2"

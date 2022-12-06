@@ -21,23 +21,21 @@ jobs:
     # NOTE: This name appears in GitHub's Checks API.
     name: lint-rust
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./runtime
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          components: rustfmt, clippy
+        run: rustup show
+
+      - name: Install protoc
+        run: sudo apt install -y protobuf-compiler
 
       - name: Clippy check
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features --locked -- -D warnings -D clippy::dbg_macro
+        run: cargo clippy --all-features --locked -- -D warnings -D clippy::dbg_macro
 
       - name: Formatting check
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: -- --check
+        run: cargo fmt -- --check
