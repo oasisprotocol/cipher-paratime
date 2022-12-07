@@ -79,5 +79,5 @@ jobs:
         with:
           # Create a draft since the release requires an offline signing process.
           draft: true
-          artifacts: cipher-paratime.orc
+          artifacts: cipher-paratime.orc,insecure-debug-cipher-paratime.orc
           token: ${{ secrets.GITHUB_TOKEN }}
