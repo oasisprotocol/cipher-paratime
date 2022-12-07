@@ -41,7 +41,7 @@ impl modules::core::Config for Config {
     /// Default local minimum gas price configuration that is used in case no overrides are set in
     /// local per-node configuration.
     const DEFAULT_LOCAL_MIN_GAS_PRICE: once_cell::unsync::Lazy<BTreeMap<Denomination, u128>> =
-        once_cell::unsync::Lazy::new(|| BTreeMap::from([(Denomination::NATIVE, 100)]));
+        once_cell::unsync::Lazy::new(|| BTreeMap::from([(Denomination::NATIVE, 5)]));
 
     /// Methods which are exempt from minimum gas price requirements.
     const MIN_GAS_PRICE_EXEMPT_METHODS: once_cell::unsync::Lazy<BTreeSet<&'static str>> =
@@ -123,11 +123,9 @@ impl sdk::Runtime for Runtime {
         (
             modules::core::Genesis {
                 parameters: modules::core::Parameters {
-                    min_gas_price: {
-                        let mut mgp = BTreeMap::new();
-                        mgp.insert(Denomination::NATIVE, 5);
-                        mgp
-                    },
+                    #[allow(clippy::borrow_interior_mutable_const)]
+                    min_gas_price: <Config as modules::core::Config>::DEFAULT_LOCAL_MIN_GAS_PRICE
+                        .clone(),
                     max_batch_gas: 1_000_000_000,
                     max_tx_size: 1024 * 1024,
                     max_tx_signers: 1,
