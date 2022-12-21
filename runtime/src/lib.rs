@@ -115,7 +115,15 @@ impl sdk::Runtime for Runtime {
                     .to_string(),
             })
         } else {
-            panic!("no trust root defined for Mainnet");
+            // Mainnet.
+            Some(TrustRoot {
+                height: 11755797,
+                hash: "8a8a45787d5d73a6c0e661b5780458c9cfc91c5a3a20f14515308ba32013769d".into(),
+                runtime_id: "000000000000000000000000000000000000000000000000e199119c992377cb"
+                    .into(),
+                chain_context: "b11b369e0da5bb230b220127f5e7b242d385ef8c6f54906243f30af63c815535"
+                    .to_string(),
+            })
         }
     }
 
@@ -131,7 +139,7 @@ impl sdk::Runtime for Runtime {
                     max_tx_signers: 1,
                     max_multisig_signers: 8,
                     gas_costs: modules::core::GasCosts {
-                        tx_byte: 1,
+                        tx_byte: 20,
                         auth_signature: 100_000,
                         auth_multisig_signer: 100_000,
                         callformat_x25519_deoxysii: 50_000,
