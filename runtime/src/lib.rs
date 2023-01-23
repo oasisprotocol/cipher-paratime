@@ -107,8 +107,8 @@ impl sdk::Runtime for Runtime {
         if is_testnet() {
             // Testnet.
             Some(TrustRoot {
-                height: 12936628,
-                hash: "d5adc6feef4f80d6d2676c44d2ab8c5d7f51f996e864300bc2ffb690897c87d3".into(),
+                height: 13670553,
+                hash: "7e0e12dcdaa9e8a83e27799c03c873a0a2fc720bcef044992578a936ac7da2a2".into(),
                 runtime_id: "0000000000000000000000000000000000000000000000000000000000000000"
                     .into(),
                 chain_context: "50304f98ddb656620ea817cc1446c401752a05a249b36c9b90dba4616829977a"
