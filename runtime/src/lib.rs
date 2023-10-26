@@ -108,11 +108,11 @@ impl sdk::Runtime for Runtime {
         if is_testnet() {
             // Testnet.
             Some(TrustRoot {
-                height: 13670553,
-                hash: "7e0e12dcdaa9e8a83e27799c03c873a0a2fc720bcef044992578a936ac7da2a2".into(),
+                height: 17976280,
+                hash: "7b71cce3c8426491af0fa3755083812fd51615777ffbae8814eb07c51cdab89d".into(),
                 runtime_id: "0000000000000000000000000000000000000000000000000000000000000000"
                     .into(),
-                chain_context: "50304f98ddb656620ea817cc1446c401752a05a249b36c9b90dba4616829977a"
+                chain_context: "0b91b8e4e44b2003a7c5e23ddadb5e14ef5345c0ebcb3ddcae07fa2f244cab76"
                     .to_string(),
             })
         } else {
