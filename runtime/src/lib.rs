@@ -11,6 +11,7 @@ use oasis_runtime_sdk::{
     types::token::{BaseUnits, Denomination},
     Module as _, Version,
 };
+use once_cell::unsync::Lazy;
 
 /// Configuration for the various modules.
 pub struct Config;
@@ -40,12 +41,12 @@ const fn state_version() -> u32 {
 impl modules::core::Config for Config {
     /// Default local minimum gas price configuration that is used in case no overrides are set in
     /// local per-node configuration.
-    const DEFAULT_LOCAL_MIN_GAS_PRICE: once_cell::unsync::Lazy<BTreeMap<Denomination, u128>> =
-        once_cell::unsync::Lazy::new(|| BTreeMap::from([(Denomination::NATIVE, 5)]));
+    const DEFAULT_LOCAL_MIN_GAS_PRICE: Lazy<BTreeMap<Denomination, u128>> =
+        Lazy::new(|| BTreeMap::from([(Denomination::NATIVE, 5)]));
 
     /// Methods which are exempt from minimum gas price requirements.
-    const MIN_GAS_PRICE_EXEMPT_METHODS: once_cell::unsync::Lazy<BTreeSet<&'static str>> =
-        once_cell::unsync::Lazy::new(|| BTreeSet::from(["consensus.Deposit"]));
+    const MIN_GAS_PRICE_EXEMPT_METHODS: Lazy<BTreeSet<&'static str>> =
+        Lazy::new(|| BTreeSet::from(["consensus.Deposit"]));
 }
 
 impl module_contracts::Config for Config {
@@ -107,11 +108,11 @@ impl sdk::Runtime for Runtime {
         if is_testnet() {
             // Testnet.
             Some(TrustRoot {
-                height: 13670553,
-                hash: "7e0e12dcdaa9e8a83e27799c03c873a0a2fc720bcef044992578a936ac7da2a2".into(),
+                height: 17976280,
+                hash: "7b71cce3c8426491af0fa3755083812fd51615777ffbae8814eb07c51cdab89d".into(),
                 runtime_id: "0000000000000000000000000000000000000000000000000000000000000000"
                     .into(),
-                chain_context: "50304f98ddb656620ea817cc1446c401752a05a249b36c9b90dba4616829977a"
+                chain_context: "0b91b8e4e44b2003a7c5e23ddadb5e14ef5345c0ebcb3ddcae07fa2f244cab76"
                     .to_string(),
             })
         } else {
@@ -127,13 +128,18 @@ impl sdk::Runtime for Runtime {
         }
     }
 
+    #[allow(clippy::borrow_interior_mutable_const)]
     fn genesis_state() -> <Self::Modules as sdk::module::MigrationHandler>::Genesis {
         (
             modules::core::Genesis {
                 parameters: modules::core::Parameters {
-                    #[allow(clippy::borrow_interior_mutable_const)]
                     min_gas_price: <Config as modules::core::Config>::DEFAULT_LOCAL_MIN_GAS_PRICE
                         .clone(),
+                    dynamic_min_gas_price: modules::core::DynamicMinGasPrice {
+                        enabled: false,
+                        target_block_gas_usage_percentage: 50,
+                        min_price_max_change_denominator: 8,
+                    },
                     max_batch_gas: 1_000_000_000,
                     max_tx_size: 1024 * 1024,
                     max_tx_signers: 1,
@@ -168,14 +174,25 @@ impl sdk::Runtime for Runtime {
                     // Consensus layer denomination is the native denomination of this runtime.
                     consensus_denomination: Denomination::NATIVE,
                     consensus_scaling_factor: 1,
+                    // Minimum delegation amount that matches the consensus layer.
+                    min_delegate_amount: 100_000_000_000,
                 },
             },
             modules::consensus_accounts::Genesis {
                 parameters: modules::consensus_accounts::Parameters {
                     gas_costs: modules::consensus_accounts::GasCosts {
-                        tx_deposit: 300_000,
-                        tx_withdraw: 300_000,
+                        tx_deposit: 4_000_000,
+                        tx_withdraw: 4_000_000,
+                        tx_delegate: 4_000_000,
+                        tx_undelegate: 8_000_000,
+
+                        store_receipt: 1_300_000,
+                        take_receipt: 1_000_000,
                     },
+                    disable_delegate: false,
+                    disable_undelegate: false,
+                    disable_deposit: false,
+                    disable_withdraw: false,
                 },
             },
             modules::rewards::Genesis {
@@ -200,27 +217,23 @@ impl sdk::Runtime for Runtime {
         )
     }
 
-    fn migrate_state<C: sdk::Context>(ctx: &mut C) {
+    fn migrate_state<C: sdk::Context>(_ctx: &mut C) {
         // State migration from by copying over parameters from updated genesis state.
         let genesis = Self::genesis_state();
 
         // Core.
-        modules::core::Module::<Config>::set_params(ctx.runtime_state(), genesis.0.parameters);
+        modules::core::Module::<Config>::set_params(genesis.0.parameters);
         // Accounts.
-        modules::accounts::Module::set_params(ctx.runtime_state(), genesis.1.parameters);
+        modules::accounts::Module::set_params(genesis.1.parameters);
         // Consensus.
-        modules::consensus::Module::set_params(ctx.runtime_state(), genesis.2.parameters);
+        modules::consensus::Module::set_params(genesis.2.parameters);
         // Consensus accounts.
         modules::consensus_accounts::Module::<modules::accounts::Module, modules::consensus::Module>::set_params(
-            ctx.runtime_state(),
             genesis.3.parameters,
         );
         // Rewards.
-        modules::rewards::Module::<modules::accounts::Module>::set_params(
-            ctx.runtime_state(),
-            genesis.4.parameters,
-        );
+        modules::rewards::Module::<modules::accounts::Module>::set_params(genesis.4.parameters);
         // Contracts.
-        module_contracts::Module::<Config>::set_params(ctx.runtime_state(), genesis.5.parameters);
+        module_contracts::Module::<Config>::set_params(genesis.5.parameters);
     }
 }
