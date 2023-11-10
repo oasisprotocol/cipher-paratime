@@ -1,6 +1,6 @@
 [package]
 name = "cipher-paratime"
-version = "3.0.0-testnet"
+version = "3.0.1-testnet"
 authors = ["Oasis Protocol Foundation <info@oasisprotocol.org>"]
 edition = "2021"
 license = "Apache-2.0"
