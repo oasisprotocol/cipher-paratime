@@ -31,7 +31,7 @@ const fn is_testnet() -> bool {
 const fn state_version() -> u32 {
     if is_testnet() {
         // Testnet.
-        6
+        7
     } else {
         // Mainnet.
         2
