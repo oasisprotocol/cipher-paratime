@@ -34,7 +34,7 @@ const fn state_version() -> u32 {
         7
     } else {
         // Mainnet.
-        2
+        3
     }
 }
 
