@@ -31,7 +31,7 @@ const fn is_testnet() -> bool {
 const fn state_version() -> u32 {
     if is_testnet() {
         // Testnet.
-        7
+        8
     } else {
         // Mainnet.
         3
@@ -136,7 +136,7 @@ impl sdk::Runtime for Runtime {
                     min_gas_price: <Config as modules::core::Config>::DEFAULT_LOCAL_MIN_GAS_PRICE
                         .clone(),
                     dynamic_min_gas_price: modules::core::DynamicMinGasPrice {
-                        enabled: false,
+                        enabled: true,
                         target_block_gas_usage_percentage: 50,
                         min_price_max_change_denominator: 8,
                     },
@@ -171,6 +171,9 @@ impl sdk::Runtime for Runtime {
             },
             modules::consensus::Genesis {
                 parameters: modules::consensus::Parameters {
+                    gas_costs: modules::consensus::GasCosts {
+                        round_root: 300_000,
+                    },
                     // Consensus layer denomination is the native denomination of this runtime.
                     consensus_denomination: Denomination::NATIVE,
                     consensus_scaling_factor: 1,
@@ -217,7 +220,7 @@ impl sdk::Runtime for Runtime {
         )
     }
 
-    fn migrate_state<C: sdk::Context>(_ctx: &mut C) {
+    fn migrate_state<C: sdk::Context>(_ctx: &C) {
         // State migration from by copying over parameters from updated genesis state.
         let genesis = Self::genesis_state();
 
