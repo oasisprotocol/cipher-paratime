@@ -31,7 +31,7 @@ const fn is_testnet() -> bool {
 const fn state_version() -> u32 {
     if is_testnet() {
         // Testnet.
-        8
+        9
     } else {
         // Mainnet.
         3
@@ -108,8 +108,8 @@ impl sdk::Runtime for Runtime {
         if is_testnet() {
             // Testnet.
             Some(TrustRoot {
-                height: 19183313,
-                hash: "54d353e4cebe669384d682aea9d19e7bde9362008128944c6df8b4a594c1ab62".into(),
+                height: 20398467,
+                hash: "1e3d05fa21e113a3dba76f24f1e93d41b418d214e0b2bb4cfa121170a08acf08".into(),
                 runtime_id: "0000000000000000000000000000000000000000000000000000000000000000"
                     .into(),
                 chain_context: "0b91b8e4e44b2003a7c5e23ddadb5e14ef5345c0ebcb3ddcae07fa2f244cab76"
@@ -146,6 +146,7 @@ impl sdk::Runtime for Runtime {
                     max_multisig_signers: 8,
                     gas_costs: modules::core::GasCosts {
                         tx_byte: 20,
+                        storage_byte: 950,
                         auth_signature: 100_000,
                         auth_multisig_signer: 100_000,
                         callformat_x25519_deoxysii: 50_000,
@@ -158,12 +159,10 @@ impl sdk::Runtime for Runtime {
                         tx_transfer: 30_000,
                     },
                     denomination_infos: {
-                        let mut denomination_infos = BTreeMap::new();
-                        denomination_infos.insert(
+                        BTreeMap::from([(
                             Denomination::NATIVE,
                             modules::accounts::types::DenominationInfo { decimals: 9 },
-                        );
-                        denomination_infos
+                        )])
                     },
                     ..Default::default()
                 },
