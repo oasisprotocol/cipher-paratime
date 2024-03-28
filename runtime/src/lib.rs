@@ -31,7 +31,7 @@ const fn is_testnet() -> bool {
 const fn state_version() -> u32 {
     if is_testnet() {
         // Testnet.
-        8
+        9
     } else {
         // Mainnet.
         3
@@ -146,6 +146,7 @@ impl sdk::Runtime for Runtime {
                     max_multisig_signers: 8,
                     gas_costs: modules::core::GasCosts {
                         tx_byte: 20,
+                        storage_byte: 950,
                         auth_signature: 100_000,
                         auth_multisig_signer: 100_000,
                         callformat_x25519_deoxysii: 50_000,
@@ -158,12 +159,10 @@ impl sdk::Runtime for Runtime {
                         tx_transfer: 30_000,
                     },
                     denomination_infos: {
-                        let mut denomination_infos = BTreeMap::new();
-                        denomination_infos.insert(
+                        BTreeMap::from([(
                             Denomination::NATIVE,
                             modules::accounts::types::DenominationInfo { decimals: 9 },
-                        );
-                        denomination_infos
+                        )])
                     },
                     ..Default::default()
                 },
