@@ -6,7 +6,7 @@ use oasis_runtime_sdk::core::consensus::verifier::TrustRoot;
 use oasis_runtime_sdk::{
     self as sdk, config,
     core::common::crypto::signature::PublicKey,
-    keymanager::TrustedPolicySigners,
+    keymanager::TrustedSigners,
     modules,
     types::token::{BaseUnits, Denomination},
     Module as _, Version,
@@ -31,7 +31,7 @@ const fn is_testnet() -> bool {
 const fn state_version() -> u32 {
     if is_testnet() {
         // Testnet.
-        9
+        10
     } else {
         // Mainnet.
         4
@@ -49,8 +49,22 @@ impl modules::core::Config for Config {
         Lazy::new(|| BTreeSet::from(["consensus.Deposit"]));
 }
 
-impl module_contracts::Config for Config {
-    type Accounts = modules::accounts::Module;
+impl module_contracts::Config for Config {}
+
+impl modules::rofl::Config for Config {
+    /// Gas cost of rofl.Create call.
+    const GAS_COST_CALL_CREATE: u64 = 6_000_000;
+    /// Gas cost of rofl.Update call.
+    const GAS_COST_CALL_UPDATE: u64 = 6_000_000;
+    /// Gas cost of rofl.Remove call.
+    const GAS_COST_CALL_REMOVE: u64 = 600_000;
+    /// Gas cost of rofl.Register call.
+    const GAS_COST_CALL_REGISTER: u64 = 6_000_000;
+    /// Gas cost of rofl.IsAuthorizedOrigin call.
+    const GAS_COST_CALL_IS_AUTHORIZED_ORIGIN: u64 = 60_000;
+
+    /// Amount of stake required for maintaining an application (10_000 ROSE/TEST).
+    const STAKE_APP_CREATE: BaseUnits = BaseUnits::new(10_000_000_000_000, Denomination::NATIVE);
 }
 
 /// The Cipher ParaTime.
@@ -72,6 +86,8 @@ impl sdk::Runtime for Runtime {
     };
 
     type Core = modules::core::Module<Config>;
+    type Accounts = modules::accounts::Module;
+    type FeeProxy = modules::rofl::Module<Config>;
 
     #[allow(clippy::type_complexity)]
     type Modules = (
@@ -82,22 +98,24 @@ impl sdk::Runtime for Runtime {
         // Consensus layer interface.
         modules::consensus::Module,
         // Consensus layer accounts.
-        modules::consensus_accounts::Module<modules::accounts::Module, modules::consensus::Module>,
+        modules::consensus_accounts::Module<modules::consensus::Module>,
         // Rewards.
-        modules::rewards::Module<modules::accounts::Module>,
+        modules::rewards::Module,
+        // ROFL.
+        modules::rofl::Module<Config>,
         // Contracts.
         module_contracts::Module<Config>,
     );
 
-    fn trusted_policy_signers() -> Option<TrustedPolicySigners> {
+    fn trusted_signers() -> Option<TrustedSigners> {
         #[allow(clippy::partialeq_to_none)]
         if option_env!("OASIS_UNSAFE_SKIP_KM_POLICY") == Some("1") {
-            return Some(TrustedPolicySigners::default());
+            return Some(TrustedSigners::default());
         }
         let tps = keymanager::trusted_policy_signers();
         // The `keymanager` crate may use a different version of `oasis_core`
-        // so we need to convert the `TrustedPolicySigners` between the versions.
-        Some(TrustedPolicySigners {
+        // so we need to convert the `TrustedSigners` between the versions.
+        Some(TrustedSigners {
             signers: tps.signers.into_iter().map(|s| PublicKey(s.0)).collect(),
             threshold: tps.threshold,
         })
@@ -142,7 +160,7 @@ impl sdk::Runtime for Runtime {
                     },
                     max_batch_gas: 1_000_000_000,
                     max_tx_size: 1024 * 1024,
-                    max_tx_signers: 1,
+                    max_tx_signers: 2,
                     max_multisig_signers: 8,
                     gas_costs: modules::core::GasCosts {
                         tx_byte: 20,
@@ -209,6 +227,10 @@ impl sdk::Runtime for Runtime {
                     participation_threshold_denominator: 4,
                 },
             },
+            modules::rofl::Genesis {
+                parameters: Default::default(),
+                apps: vec![],
+            },
             module_contracts::Genesis {
                 parameters: module_contracts::Parameters {
                     max_memory_pages: 20, // 1280 KiB
@@ -230,12 +252,14 @@ impl sdk::Runtime for Runtime {
         // Consensus.
         modules::consensus::Module::set_params(genesis.2.parameters);
         // Consensus accounts.
-        modules::consensus_accounts::Module::<modules::accounts::Module, modules::consensus::Module>::set_params(
+        modules::consensus_accounts::Module::<modules::consensus::Module>::set_params(
             genesis.3.parameters,
         );
         // Rewards.
-        modules::rewards::Module::<modules::accounts::Module>::set_params(genesis.4.parameters);
+        modules::rewards::Module::set_params(genesis.4.parameters);
+        // ROFL.
+        modules::rofl::Module::<Config>::set_params(genesis.5.parameters);
         // Contracts.
-        module_contracts::Module::<Config>::set_params(genesis.5.parameters);
+        module_contracts::Module::<Config>::set_params(genesis.6.parameters);
     }
 }
