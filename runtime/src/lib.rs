@@ -34,7 +34,7 @@ const fn state_version() -> u32 {
         10
     } else {
         // Mainnet.
-        4
+        5
     }
 }
 
@@ -62,6 +62,10 @@ impl modules::rofl::Config for Config {
     const GAS_COST_CALL_REGISTER: u64 = 6_000_000;
     /// Gas cost of rofl.IsAuthorizedOrigin call.
     const GAS_COST_CALL_IS_AUTHORIZED_ORIGIN: u64 = 60_000;
+    /// Gas cost of rofl.AuthorizedOriginNode call.
+    const GAS_COST_CALL_AUTHORIZED_ORIGIN_NODE: u64 = 120_000;
+    /// Gas cost of rofl.AuthorizedOriginEntity call.
+    const GAS_COST_CALL_AUTHORIZED_ORIGIN_ENTITY: u64 = 120_000;
 
     /// Amount of stake required for maintaining an application (10_000 ROSE/TEST).
     const STAKE_APP_CREATE: BaseUnits = BaseUnits::new(10_000_000_000_000, Denomination::NATIVE);
