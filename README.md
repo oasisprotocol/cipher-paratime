@@ -111,18 +111,25 @@ sudo apt install gcc gcc-multilib clang
 [Clang]: https://clang.llvm.org/
 [wasm3-rs]: https://github.com/wasm3/wasm3-rs
 
-### Non-SGX Binary
+### Mock SGX Binary
 
-To build the non-SGX binary of the Cipher ParaTime, checkout the appropriate
-version and run:
+Mock SGX allows a developer to run the Cipher ParaTime binary without
+performing the attestation and requiring actual SGX hardware. While you can't
+connect to a production Mainnet or Testnet with such a setup, it is useful for
+testing Cipher locally and/or testing dApps that require
+Cipher-specific features, for example in the CI environments.
 
-```
-cargo build --release
+To build the unsafe, mock SGX binary of the Cipher ParaTime for Localnet
+checkout the appropriate version and run:
+
+```shell
+export OASIS_UNSAFE_SKIP_AVR_VERIFY=1 OASIS_UNSAFE_ALLOW_DEBUG_ENCLAVES=1
+cargo build --release --features debug-mock-sgx
 ```
 
 The resulting ELF binary is located at `target/release/cipher-paratime`.
 
-_NOTE: The non-SGX binary is dynamically linked so it may not be portable
+_NOTE: The mock SGX binary is dynamically linked so it may not be portable
 between machines with different versions of shared libraries._
 
 ### SGX Binary
