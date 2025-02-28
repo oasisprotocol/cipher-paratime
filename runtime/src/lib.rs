@@ -32,7 +32,7 @@ const fn is_testnet() -> bool {
 const fn state_version() -> u32 {
     if is_testnet() {
         // Testnet.
-        10
+        11
     } else {
         // Mainnet.
         5
@@ -69,9 +69,11 @@ impl modules::rofl::Config for Config {
     const GAS_COST_CALL_AUTHORIZED_ORIGIN_ENTITY: u64 = 120_000;
     /// Gas cost of rofl.StakeThresholds call.
     const GAS_COST_CALL_STAKE_THRESHOLDS: u64 = 10;
+    /// Gas cost of rofl.DeriveKey call.
+    const GAS_COST_CALL_DERIVE_KEY: u64 = 600_000;
 
-    /// Amount of stake required for maintaining an application (10_000 ROSE/TEST).
-    const STAKE_APP_CREATE: BaseUnits = BaseUnits::new(10_000_000_000_000, Denomination::NATIVE);
+    /// Amount of stake required for maintaining an application (100 ROSE/TEST).
+    const STAKE_APP_CREATE: BaseUnits = BaseUnits::new(100_000_000_000, Denomination::NATIVE);
 }
 
 /// The Cipher ParaTime.
@@ -169,7 +171,7 @@ impl sdk::Runtime for Runtime {
                     },
                     max_batch_gas: 1_000_000_000,
                     max_tx_size: 1024 * 1024,
-                    max_tx_signers: 2,
+                    max_tx_signers: 3,
                     max_multisig_signers: 8,
                     gas_costs: modules::core::GasCosts {
                         tx_byte: 20,
