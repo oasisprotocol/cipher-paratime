@@ -21,7 +21,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.21.x"
+          go-version: "1.23.x"
 
       - name: Build tagged release, elf, debug
         id: build-debug-elf
@@ -68,6 +68,7 @@ jobs:
           go install github.com/oasisprotocol/oasis-sdk/tools/orc@latest
           pushd runtime
           orc init ${RUNTIME_EXECUTABLE} --sgx-executable ${RUNTIME_SGXS} --output ../cipher-paratime.orc
+          orc sgx-set-sig ../cipher-paratime.orc
           popd
         env:
           RUNTIME_EXECUTABLE: ${{ github.workspace }}/${{ steps.build-elf.outputs.build-path }}/cipher-paratime
@@ -76,7 +77,6 @@ jobs:
       - name: Publish the release
         uses: ncipollo/release-action@v1
         with:
-          # Create a draft since the release requires an offline signing process.
           draft: true
           artifacts: cipher-paratime.orc,localnet-cipher-paratime.orc
           token: ${{ secrets.GITHUB_TOKEN }}
