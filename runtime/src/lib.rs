@@ -32,7 +32,7 @@ const fn is_testnet() -> bool {
 const fn state_version() -> u32 {
     if is_testnet() {
         // Testnet.
-        12
+        13
     } else {
         // Mainnet.
         6
@@ -283,6 +283,8 @@ impl sdk::Runtime for Runtime {
 
                         store_receipt: 1_300_000,
                         take_receipt: 1_000_000,
+
+                        delegation: 700_000,
                     },
                     disable_delegate: false,
                     disable_undelegate: false,
