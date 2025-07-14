@@ -32,7 +32,7 @@ const fn is_testnet() -> bool {
 const fn state_version() -> u32 {
     if is_testnet() {
         // Testnet.
-        13
+        14
     } else {
         // Mainnet.
         7
@@ -67,6 +67,8 @@ impl modules::rofl::Config for Config {
     const GAS_COST_CALL_AUTHORIZED_ORIGIN_NODE: u64 = 120_000;
     /// Gas cost of rofl.AuthorizedOriginEntity call.
     const GAS_COST_CALL_AUTHORIZED_ORIGIN_ENTITY: u64 = 120_000;
+    /// Gas cost of rofl.OriginApp call.
+    const GAS_COST_CALL_ORIGIN_APP: u64 = 60_000;
     /// Gas cost of rofl.StakeThresholds call.
     const GAS_COST_CALL_STAKE_THRESHOLDS: u64 = 10;
     /// Gas cost of rofl.DeriveKey call.
@@ -74,6 +76,12 @@ impl modules::rofl::Config for Config {
 
     /// Amount of stake required for maintaining an application (100 ROSE/TEST).
     const STAKE_APP_CREATE: BaseUnits = BaseUnits::new(100_000_000_000, Denomination::NATIVE);
+
+    /// Endorsement policy evaluator.
+    type EndorsementPolicyEvaluator = (
+        modules::rofl::policy::BasicEndorsementPolicyEvaluator,
+        module_rofl_market::policy::ProviderEndorsementPolicyEvaluator,
+    );
 }
 
 impl module_rofl_market::Config for Config {
@@ -94,6 +102,8 @@ impl module_rofl_market::Config for Config {
     const GAS_COST_CALL_PROVIDER_REMOVE: u64 = 6_000_000;
     /// Gas cost of roflmarket.InstanceCreate call.
     const GAS_COST_CALL_INSTANCE_CREATE: u64 = 6_000_000;
+    /// Gas cost of roflmarket.InstanceChangeAdmin call.
+    const GAS_COST_CALL_INSTANCE_CHANGE_ADMIN: u64 = 600_000;
     /// Gas cost of roflmarket.InstanceAccept call.
     const GAS_COST_CALL_INSTANCE_ACCEPT_BASE: u64 = 600_000;
     /// Gas cost of each accepted instance in roflmarket.InstanceAccept call.
@@ -285,6 +295,7 @@ impl sdk::Runtime for Runtime {
                         take_receipt: 1_000_000,
 
                         delegation: 700_000,
+                        shares_to_tokens: 700_000,
                     },
                     disable_delegate: false,
                     disable_undelegate: false,
