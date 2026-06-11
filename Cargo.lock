@@ -433,7 +433,7 @@ dependencies = [
 
 [[package]]
 name = "cipher-paratime"
-version = "3.7.0-testnet"
+version = "3.7.1-testnet"
 dependencies = [
  "keymanager",
  "oasis-runtime-sdk",
