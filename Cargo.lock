@@ -433,7 +433,7 @@ dependencies = [
 
 [[package]]
 name = "cipher-paratime"
-version = "3.7.0-testnet"
+version = "3.7.1-testnet"
 dependencies = [
  "keymanager",
  "oasis-runtime-sdk",
@@ -2168,7 +2168,7 @@ checksum = "5fe0d7f5a7c55eba7e8e845046c6c81332f4fa4997f0ed497b9f44db1d7f2050"
 [[package]]
 name = "oasis-contract-sdk-crypto"
 version = "0.3.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.0#7dcaaf27ab71a94699b898c4d061291c8ab2671f"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.1#3e00a16d76727596d58b8f91a1c998c97f1652ba"
 dependencies = [
  "hmac",
  "k256",
@@ -2182,7 +2182,7 @@ dependencies = [
 [[package]]
 name = "oasis-contract-sdk-types"
 version = "0.3.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.0#7dcaaf27ab71a94699b898c4d061291c8ab2671f"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.1#3e00a16d76727596d58b8f91a1c998c97f1652ba"
 dependencies = [
  "bech32",
  "oasis-cbor",
@@ -2283,7 +2283,7 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk"
 version = "0.15.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.0#7dcaaf27ab71a94699b898c4d061291c8ab2671f"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.1#3e00a16d76727596d58b8f91a1c998c97f1652ba"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -2324,7 +2324,7 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk-contracts"
 version = "0.5.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.0#7dcaaf27ab71a94699b898c4d061291c8ab2671f"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.1#3e00a16d76727596d58b8f91a1c998c97f1652ba"
 dependencies = [
  "anyhow",
  "blake3",
@@ -2345,7 +2345,7 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk-evm"
 version = "0.6.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.0#7dcaaf27ab71a94699b898c4d061291c8ab2671f"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.1#3e00a16d76727596d58b8f91a1c998c97f1652ba"
 dependencies = [
  "anyhow",
  "base64",
@@ -2379,7 +2379,7 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk-macros"
 version = "0.3.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.0#7dcaaf27ab71a94699b898c4d061291c8ab2671f"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.1#3e00a16d76727596d58b8f91a1c998c97f1652ba"
 dependencies = [
  "darling 0.20.11",
  "hex",
@@ -2392,7 +2392,7 @@ dependencies = [
 [[package]]
 name = "oasis-runtime-sdk-rofl-market"
 version = "0.1.0"
-source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.0#7dcaaf27ab71a94699b898c4d061291c8ab2671f"
+source = "git+https://github.com/oasisprotocol/oasis-sdk?tag=runtime-sdk%2Fv0.17.1#3e00a16d76727596d58b8f91a1c998c97f1652ba"
 dependencies = [
  "anyhow",
  "base64",
@@ -4012,7 +4012,7 @@ dependencies = [
 [[package]]
 name = "wasm3"
 version = "0.3.3"
-source = "git+https://github.com/oasisprotocol/wasm3-rs?tag=v0.3.3#6952da16a9ff789dab0ee5ff6623ba7a58ca977f"
+source = "git+https://github.com/oasisprotocol/wasm3-rs?tag=v0.3.4#7e24ecff1007850926f2ee7a11332c3f2ed22d00"
 dependencies = [
  "cty",
  "impl-trait-for-tuples",
@@ -4024,7 +4024,7 @@ dependencies = [
 [[package]]
 name = "wasm3-sys"
 version = "0.3.3"
-source = "git+https://github.com/oasisprotocol/wasm3-rs?tag=v0.3.3#6952da16a9ff789dab0ee5ff6623ba7a58ca977f"
+source = "git+https://github.com/oasisprotocol/wasm3-rs?tag=v0.3.4#7e24ecff1007850926f2ee7a11332c3f2ed22d00"
 dependencies = [
  "bindgen 0.69.5",
  "cc",
